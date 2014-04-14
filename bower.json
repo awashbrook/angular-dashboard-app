@@ -24,7 +24,8 @@
     "angular-pines-notify": "~0.0.3",
     "pnotify": "git@github.com:sciactive/pnotify.git#master",
     "angular-ui-sortable": "~0.12.2",
-    "rickshaw": "~1.4.6"
+    "rickshaw": "~1.4.6",
+    "moment": "~2.6.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.7",

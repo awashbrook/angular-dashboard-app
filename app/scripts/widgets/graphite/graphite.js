@@ -6,6 +6,7 @@ angular.module('ui.dashboard.widgets')
           restrict: 'EA',
           replace:  true,
           templateUrl: 'scripts/widgets/graphite/graphite.tpl.html',
+          optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html',
           scope: {
               url:    '@',
               target: '@', // AW changed from '='
