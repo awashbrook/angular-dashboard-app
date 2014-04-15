@@ -90,6 +90,43 @@ angular.module('app.service')
         });
 
         return deferred.promise;
+      },
+      
+      // AW Jan's Rickshaw series Graphite controller from Capman
+      // Not ideal with params from directive scope passed...
+      // How can we better share data between directive scope and utility functions in services?!  
+      
+      fetchRickshawSeries: function(url, target, from, until) {
+        var deferred = $q.defer();
+
+        $http.get(url, { params: {
+            target: target,
+            from: from,
+            until: until,
+            format: 'json' // AW
+        }}).success(function (data) {
+            var seriesData = _.map(data, function(result) {
+                return {
+                    color: '#6060c0',
+                    data:   _.map(result.datapoints, function(datapoint) {
+                        return {
+                            x: datapoint[1],
+                            y: datapoint[0]
+                        };
+                    }),
+                    name: result.target
+                };
+            });
+
+            deferred.resolve(seriesData);
+        }).
+        error(function (data, status) {
+            deferred.reject(status);
+        });
+
+        return deferred.promise;
       }
+
+
     };
   });

@@ -14,40 +14,11 @@ angular.module('ui.dashboard.widgets')
               annotations: '='
           },
           // AW Factor out
-          controller: ['$scope', '$rootScope', '$http', '$timeout', '$q', function ($scope, $rootScope, $http, $timeout, $q) {
+          controller: ['$scope', '$rootScope', '$timeout', 'Gateway', function ($scope, $rootScope, $timeout, Gateway) {
 
-              // todo: implement a Rickshaw.Graph.Promise
-              $scope.fetchSeriesData = function() {
-                  var deferred = $q.defer();
-
-                  $http.get($scope.url, { params: {
-                      target: $scope.target,
-                      from: $scope.from,
-                      until: $scope.until,
-                      format: 'json' // AW
-                  }}).success(function (data) {
-                      var seriesData = _.map(data, function(result) {
-                          return {
-                              color: '#6060c0',
-                              data:   _.map(result.datapoints, function(datapoint) {
-                                  return {
-                                      x: datapoint[1],
-                                      y: datapoint[0]
-                                  };
-                              }),
-                              name: result.target
-                          };
-                      });
-
-                      deferred.resolve(seriesData);
-                  }).
-                  error(function (data, status) {
-                      deferred.reject(status);
-                  });
-
-                  return deferred.promise;
-              };
-
+              //JM todo: implement a Rickshaw.Graph.Promise similar to Rickshaw.Graph.AJAX
+              $scope.fetchSeriesData = Gateway.fetchRickshawSeries;
+              
               var renderingScheduled;
               $rootScope.$watch('windowWidth', function () {
                   if (! renderingScheduled) {
@@ -59,16 +30,6 @@ angular.module('ui.dashboard.widgets')
                       }, 500);
                   }
               });
-              
-              
-              // $scope.dashboardOptions = {
-    //             //useLocalStorage: true, //TODO enable by default
-    //             widgetButtons: true,
-    //             widgetDefinitions: widgetDefs,
-    //             defaultWidgets: defaultWidgets,
-    //             optionsTemplateUrl: 'template/widgetOptions.html'
-    //           };
-              
           }],
           link: function (scope, element) {
               var container = element[0],
@@ -84,7 +45,6 @@ angular.module('ui.dashboard.widgets')
                   renderer: 'line',
                   series:   scope.series
               });
-
 
               var xAxis = new Rickshaw.Graph.Axis.Time( {
                   graph: graph,
@@ -137,7 +97,7 @@ angular.module('ui.dashboard.widgets')
 
               // update methods
 
-              scope.fetchSeriesData().then(function(series) {
+              scope.fetchSeriesData(scope.url, scope.target, scope.from, scope.until).then(function(series) {
                   scope.updateWith(series);
                   scope.render();
               });
