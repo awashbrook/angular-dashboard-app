@@ -6,7 +6,6 @@ angular.module('ui.dashboard.widgets')
           restrict: 'EA',
           replace:  true,
           templateUrl: 'scripts/widgets/graphite/graphite.tpl.html',
-          optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html',
           scope: {
               url:    '@',
               target: '@', // AW changed from '='
@@ -25,7 +24,7 @@ angular.module('ui.dashboard.widgets')
                       target: $scope.target,
                       from: $scope.from,
                       until: $scope.until,
-		              format: 'json' // AW
+                      format: 'json' // AW
                   }}).success(function (data) {
                       var seriesData = _.map(data, function(result) {
                           return {
@@ -49,7 +48,6 @@ angular.module('ui.dashboard.widgets')
                   return deferred.promise;
               };
 
-
               var renderingScheduled;
               $rootScope.$watch('windowWidth', function () {
                   if (! renderingScheduled) {
@@ -61,6 +59,16 @@ angular.module('ui.dashboard.widgets')
                       }, 500);
                   }
               });
+              
+              
+              // $scope.dashboardOptions = {
+    //             //useLocalStorage: true, //TODO enable by default
+    //             widgetButtons: true,
+    //             widgetDefinitions: widgetDefs,
+    //             defaultWidgets: defaultWidgets,
+    //             optionsTemplateUrl: 'template/widgetOptions.html'
+    //           };
+              
           }],
           link: function (scope, element) {
               var container = element[0],

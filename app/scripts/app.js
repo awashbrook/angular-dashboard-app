@@ -27,7 +27,7 @@ angular.module('app', [
       .when('/rest', {
         templateUrl: 'views/main.html',
         controller: 'RestDataCtrl'
-      })
+      })  
       .when('/meteor', {
         templateUrl: 'views/main.html',
         controller: 'MeteorCtrl'
@@ -51,6 +51,10 @@ angular.module('app', [
       .when('/serverdata', {
         templateUrl: 'views/main.html',
         controller: 'ServerDataCtrl'
+      })
+      .when('/graphite', {
+        templateUrl: 'views/main.html',
+        controller: 'GraphiteCtrl'
       })
       .otherwise({
         redirectTo: '/'
