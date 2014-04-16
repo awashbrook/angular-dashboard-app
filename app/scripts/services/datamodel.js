@@ -102,6 +102,44 @@ angular.module('app.service')
 
     return RestTimeSeriesDataModel;
   })
+  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http, $q) {
+    function GraphiteTimeSeriesDataModel() {
+    }
+
+    GraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
+
+    GraphiteTimeSeriesDataModel.prototype.init = function () {
+      WidgetDataModel.prototype.init.call(this);
+
+      var params = this.dataModelOptions ? this.dataModelOptions.params : {};
+
+      $http.get(params.url, { params: {
+        target: params.target,
+        from: params.from,
+        until: params.until,
+        format: 'json' // AW
+      }}).success(function (data) {
+        var seriesData = _.map(data, function(result) {
+          return {
+              color: '#6060c0',
+              data:   _.map(result.datapoints, function(datapoint) {
+                  return {
+                      x: datapoint[1],
+                      y: datapoint[0]
+                    };
+                }),
+              name: result.target
+            };
+        });
+        WidgetDataModel.prototype.updateScope.call(this, seriesData);
+      }.bind(this));
+      // .error(function (data, status) {
+      //     deferred.reject(status);
+      // })
+    };
+
+    return GraphiteTimeSeriesDataModel;
+  })
   .factory('MeteorTimeSeriesDataModel', function (settings, MeteorDdp, WidgetDataModel) {
     function MeteorTimeSeriesDataModel() {
       var ddp = new MeteorDdp(settings.meteorURL); //TODO
