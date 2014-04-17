@@ -24,19 +24,19 @@ angular.module('app')
 //                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
 //                 ></graphite>
 //  
-           
-      {
-        name: 'graphite',
-        attrs: {
-          url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-          from:'-6h',
-          until: 'now',
-          target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage'
-        },
-        style: {
-          width: '50%'
-        }
-      },
+      //      
+      // {
+      //   name: 'graphite',
+      //   attrs: {
+      //     url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+      //     from:'-6h',
+      //     until: 'now',
+      //     target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage'
+      //   },
+      //   style: {
+      //     width: '50%'
+      //   }
+      // },
 
       // TODO - WIP       //      
       {

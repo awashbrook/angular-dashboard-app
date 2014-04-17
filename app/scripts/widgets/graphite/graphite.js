@@ -11,7 +11,8 @@ angular.module('ui.dashboard.widgets')
               target: '@', // AW changed from '='
               from:   '@',
               until:  '@',
-              annotations: '='
+              annotations: '=',
+              graphite: '=' //AW Manged by AD as per dataAttrName=’graphite’
           },
           // AW Factor out
           controller: ['$scope', '$rootScope', '$timeout', 'Gateway', function ($scope, $rootScope, $timeout, Gateway) {
@@ -94,14 +95,44 @@ angular.module('ui.dashboard.widgets')
                   graph:   graph,
                   element: timeline
               } );
+            
+              //AW TODO Update for DataModel
+              scope.$watch('graphite', function (graphite) {
+                if (graphite) {
+                  var rickshawSeries = _.map(graphite, function(result) {
+                    /*AW Sample Rickshaw Series
+                    {
+                        name: "Convergence",
+                        data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
+                    },
+                    {
+                        name: "Divergence",
+                        data: [{x:1, y: 5}, {x:2, y:2}, {x:3, y:9}]
+                    }*/
 
-              // update methods
-
-              scope.fetchSeriesData(scope.url, scope.target, scope.from, scope.until).then(function(series) {
-                  scope.updateWith(series);
+                    return {
+                        color: '#6060c0',
+                        data:   _.map(result.datapoints, function(datapoint) {
+                            return {
+                                x: datapoint[1],
+                                y: datapoint[0]
+                              };
+                          }),
+                        name: result.target
+                      };
+                  });
+                  // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+                  scope.updateWith(rickshawSeries);
                   scope.render();
+                }
               });
 
+              // //JM update methods
+              // scope.fetchRickshawSeriesData(scope.url, scope.target, scope.from, scope.until).then(function(series) {
+              //     scope.updateWith(series);
+              //     scope.render();
+              // });
+  
               scope.updateWith = function(series) {
                   // need to hold a reference to scope.series, that's why a simple assignment won't work.
                   scope.series.length = 0;

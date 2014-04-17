@@ -102,7 +102,7 @@ angular.module('app.service')
 
     return RestTimeSeriesDataModel;
   })
-  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http, $q) {
+  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http) {
     function GraphiteTimeSeriesDataModel() {
     }
 
@@ -112,30 +112,27 @@ angular.module('app.service')
       WidgetDataModel.prototype.init.call(this);
 
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
+      //AW When real graphite data in alpha having a bad day, don't forget random walk, 
+      // which is accepted multiple times but which we can't hash below!
 
       $http.get(params.url, { params: {
-        target: params.target,
+        target: 'randomWalk(%27random%20walk2%27)',
+        // target: params.target,
         from: params.from,
         until: params.until,
         format: 'json' // AW
-      }}).success(function (data) {
-        var seriesData = _.map(data, function(result) {
-          return {
-              color: '#6060c0',
-              data:   _.map(result.datapoints, function(datapoint) {
-                  return {
-                      x: datapoint[1],
-                      y: datapoint[0]
-                    };
-                }),
-              name: result.target
-            };
-        });
-        WidgetDataModel.prototype.updateScope.call(this, seriesData);
-      }.bind(this));
-      // .error(function (data, status) {
-      //     deferred.reject(status);
-      // })
+      }})
+      .success(function (graphiteData) {
+        console.log('Graphite Responded');  
+        // console.log(JSON.stringify(graphiteData));  
+        
+        // TODO Strip NULLS!
+        
+        WidgetDataModel.prototype.updateScope.call(this, graphiteData);
+      }.bind(this))
+      .error(function (data, status) {
+          console.log('AW TODO better handling:' + status);  
+      });
     };
 
     return GraphiteTimeSeriesDataModel;
