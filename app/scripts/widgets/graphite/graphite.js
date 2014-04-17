@@ -100,7 +100,8 @@ angular.module('ui.dashboard.widgets')
               scope.$watch('graphite', function (graphite) {
                 if (graphite) {
                   var rickshawSeries = _.map(graphite, function(result) {
-                    /*AW Sample Rickshaw Series
+                    /*AW Convert to Rickshaw Series
+                    Sample Rickshaw Series
                     {
                         name: "Convergence",
                         data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
@@ -121,7 +122,7 @@ angular.module('ui.dashboard.widgets')
                         name: result.target
                       };
                   });
-                  // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+                  console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
                   scope.updateWith(rickshawSeries);
                   scope.render();
                 }

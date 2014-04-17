@@ -116,22 +116,70 @@ angular.module('app.service')
       // which is accepted multiple times but which we can't hash below!
 
       $http.get(params.url, { params: {
-        target: 'randomWalk(%27random%20walk2%27)',
-        // target: params.target,
+        // target: 'randomWalk(%27random%20walk2%27)',
+        target: params.target,
         from: params.from,
         until: params.until,
         format: 'json' // AW
       }})
       .success(function (graphiteData) {
-        console.log('Graphite Responded');  
-        // console.log(JSON.stringify(graphiteData));  
+        console.log('Graphite Responded');
+        console.log(JSON.stringify(graphiteData));
+          
+        // Strip NULLS: this is how we did it dashing with Ruby
+          
+        // graphite = [
+        //     {
+        //       target: "stats_counts.http.ok",
+        //       datapoints: [[10, 1378449600], [40, 1378452000], [53, 1378454400], [63, 1378456800], [27, 1378459200]]
+        //     },
+        //     {
+        //       target: "stats_counts.http.err",
+        //       datapoints: [[0, 1378449600], [4, 1378452000], [nil, 1378454400], [3, 1378456800], [0, 1378459200]]
+        //     }
+        //   ]
+
+        // result.each do |stats|
+        //   non_nil_points = (stats[:datapoints].select { |point| not point[0].nil? })    
+        //   if non_nil_points.size == 0
+        //     puts ">> WARNING >> All data was Null for for #{url_path_and_query}" 
+        //   end
+        //   stats[:datapoints] = non_nil_points 
+        // end
         
-        // TODO Strip NULLS!
-        
-        WidgetDataModel.prototype.updateScope.call(this, graphiteData);
+        var filteredGraphiteData = _.map(graphiteData, function(stats) {
+          return {
+            target: stats.target,
+            datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
+          };
+        });
+
+        console.log(JSON.stringify(filteredGraphiteData));
+
+        var emptySeries = 0;
+        for (var i = 0; i < filteredGraphiteData.length; i++) {
+          if (filteredGraphiteData[i].datapoints == 0) {
+            emptySeries++;
+            console.log('WARNING> Series ' + filteredGraphiteData[i].target + ' was empty from Graphite!');
+          }
+        }
+        if (emptySeries === filteredGraphiteData.length) {
+          console.log('WARNING>> ALL SERIES from Graphite were empty, skipping model updates!!');
+        } else {
+          WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+        }
+
+        // for (var i = 0; i < graphiteData.length; i++) {
+        //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
+        //   if (non_nil_points.length == 0) { 
+        //     console.log('>> WARNING >> All data was Null from Graphite!');
+        //   } 
+        //   graphiteData[i].datapoints = non_nil_points;
+        // }          
+
       }.bind(this))
       .error(function (data, status) {
-          console.log('AW TODO better handling:' + status);  
+          console.log('AW TODO better handling:' + status);
       });
     };
 

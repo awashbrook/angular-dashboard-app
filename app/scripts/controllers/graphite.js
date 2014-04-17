@@ -37,10 +37,8 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-
-      // TODO - WIP       //      
       {
-        name: 'graphite2',
+        name: 'graphiteRandomWalk',
         directive: 'graphite',
         dataAttrName: 'graphite',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -49,14 +47,30 @@ angular.module('app')
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
             from:'-6h',
             until: 'now',
-            target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage'
+            target:'randomWalk(%27random%20walk2%27)'
           }
         },
         style: {
           width: '50%'
         }
       },
-      
+      {
+        name: 'graphiteRP',
+        directive: 'graphite',
+        dataAttrName: 'graphite',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp*.os.cpu.usage'
+          }
+        },
+        style: {
+          width: '50%'
+        }
+      },
       {
         name: 'wt-top-n',
         dataAttrName: 'data',
