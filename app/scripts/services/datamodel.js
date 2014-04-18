@@ -102,85 +102,110 @@ angular.module('app.service')
 
     return RestTimeSeriesDataModel;
   })
-  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http) {
+  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http, $interval) {
     function GraphiteTimeSeriesDataModel() {
     }
 
     GraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
 
     GraphiteTimeSeriesDataModel.prototype.init = function () {
-      WidgetDataModel.prototype.init.call(this);
+      WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
-      //AW When real graphite data in alpha having a bad day, don't forget random walk, 
-      // which is accepted multiple times but which we can't hash below!
-
-      $http.get(params.url, { params: {
-        // target: 'randomWalk(%27random%20walk2%27)',
-        target: params.target,
-        from: params.from,
-        until: params.until,
-        format: 'json' // AW
-      }})
-      .success(function (graphiteData) {
-        console.log('Graphite Responded');
-        console.log(JSON.stringify(graphiteData));
-          
-        // Strip NULLS: this is how we did it dashing with Ruby
-          
-        // graphite = [
-        //     {
-        //       target: "stats_counts.http.ok",
-        //       datapoints: [[10, 1378449600], [40, 1378452000], [53, 1378454400], [63, 1378456800], [27, 1378459200]]
-        //     },
-        //     {
-        //       target: "stats_counts.http.err",
-        //       datapoints: [[0, 1378449600], [4, 1378452000], [nil, 1378454400], [3, 1378456800], [0, 1378459200]]
-        //     }
-        //   ]
-
-        // result.each do |stats|
-        //   non_nil_points = (stats[:datapoints].select { |point| not point[0].nil? })    
-        //   if non_nil_points.size == 0
-        //     puts ">> WARNING >> All data was Null for for #{url_path_and_query}" 
-        //   end
-        //   stats[:datapoints] = non_nil_points 
-        // end
+    
+      // Default polling interval is 30 seconds
+      var interval = params.interval;
+      interval || (interval = 30);
+      
+      this.callGraphite = function () {
         
-        var filteredGraphiteData = _.map(graphiteData, function(stats) {
-          return {
-            target: stats.target,
-            datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
-          };
-        });
+         var params = this.dataModelOptions.params;
 
-        console.log(JSON.stringify(filteredGraphiteData));
+        //AW When real graphite data in alpha having a bad day, don't forget random walk 
+        // target: 'randomWalk(%27random%20walk2%27)',
+      
+        $http.get(params.url, { params: {
+          // TODO support target being specified multiple times, which we can't pass in this hash method!
+          target: params.target,
+          from: params.from,
+          until: params.until,
+          format: 'json' // AW
+        }})
+        .success(function (graphiteData) {
+          console.log('Graphite Responded');
+          // console.log(JSON.stringify(graphiteData));
+          
+          // Strip out null data points: this is how we did it dashing with Ruby
+          
+          // graphite = [
+          //     {
+          //       target: "stats_counts.http.ok",
+          //       datapoints: [[10, 1378449600], [40, 1378452000], [53, 1378454400], [63, 1378456800], [27, 1378459200]]
+          //     },
+          //     {
+          //       target: "stats_counts.http.err",
+          //       datapoints: [[0, 1378449600], [4, 1378452000], [nil, 1378454400], [3, 1378456800], [0, 1378459200]]
+          //     }
+          //   ]
 
-        var emptySeries = 0;
-        for (var i = 0; i < filteredGraphiteData.length; i++) {
-          if (filteredGraphiteData[i].datapoints == 0) {
-            emptySeries++;
-            console.log('WARNING> Series ' + filteredGraphiteData[i].target + ' was empty from Graphite!');
+          // result.each do |stats|
+          //   non_nil_points = (stats[:datapoints].select { |point| not point[0].nil? })    
+          //   if non_nil_points.size == 0
+          //     puts ">> WARNING >> All data was Null for for #{url_path_and_query}" 
+          //   end
+          //   stats[:datapoints] = non_nil_points 
+          // end
+        
+          var filteredGraphiteData = _.map(graphiteData, function(stats) {
+            return {
+              target: stats.target,
+              datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
+            };
+          });
+
+          // console.log(JSON.stringify(filteredGraphiteData));
+
+          var emptySeries = 0;
+          for (var i = 0; i < filteredGraphiteData.length; i++) {
+            if (filteredGraphiteData[i].datapoints == 0) {
+              emptySeries++;
+              console.log('WARNING> Series ' + filteredGraphiteData[i].target + ' was empty from Graphite!');
+            }
           }
-        }
-        if (emptySeries === filteredGraphiteData.length) {
-          console.log('WARNING>> ALL SERIES from Graphite were empty, skipping model updates!!');
-        } else {
-          WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
-        }
+          if (emptySeries === filteredGraphiteData.length) {
+            console.log('WARNING>> ALL SERIES from Graphite were empty, skipping model updates!!');
+          } else {
+            console.log(JSON.stringify(filteredGraphiteData));
+            WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+          }
 
-        // for (var i = 0; i < graphiteData.length; i++) {
-        //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
-        //   if (non_nil_points.length == 0) { 
-        //     console.log('>> WARNING >> All data was Null from Graphite!');
-        //   } 
-        //   graphiteData[i].datapoints = non_nil_points;
-        // }          
+          //AW Below partially iterative doesn't work because looping over function is BAD!
+          // for (var i = 0; i < graphiteData.length; i++) {
+          //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
+          //   if (non_nil_points.length == 0) { 
+          //     console.log('>> WARNING >> All data was Null from Graphite!');
+          //   } 
+          //   graphiteData[i].datapoints = non_nil_points;
+          // }          
 
-      }.bind(this))
-      .error(function (data, status) {
-          console.log('AW TODO better handling:' + status);
-      });
+        }.bind(this))
+        .error(function (data, status) {
+            console.log('AW TODO better handling:' + status);
+        });
+       
+      }.bind(this);
+      
+      this.callGraphite();
+      
+      this.intervalPromise = $interval(function () {
+        this.callGraphite();
+      }.bind(this), interval * 1000);
+      
+    };
+
+    GraphiteTimeSeriesDataModel.prototype.destroy = function () {
+      WidgetDataModel.prototype.destroy.call(this);
+      $interval.cancel(this.intervalPromise);
     };
 
     return GraphiteTimeSeriesDataModel;

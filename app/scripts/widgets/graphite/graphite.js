@@ -96,7 +96,8 @@ angular.module('ui.dashboard.widgets')
                   element: timeline
               } );
             
-              //AW TODO Update for DataModel
+              //AW TODO Update for multiple series:
+              //datamodel.js:178 stacked series cannot have differing numbers of points: 359 vs 0; see Rickshaw.Series.fill() 
               scope.$watch('graphite', function (graphite) {
                 if (graphite) {
                   var rickshawSeries = _.map(graphite, function(result) {
@@ -122,7 +123,7 @@ angular.module('ui.dashboard.widgets')
                         name: result.target
                       };
                   });
-                  console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+                  // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
                   scope.updateWith(rickshawSeries);
                   scope.render();
                 }

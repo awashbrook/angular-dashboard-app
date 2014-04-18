@@ -45,9 +45,10 @@ angular.module('app')
         dataModelOptions: {
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-            from:'-6h',
+            from:'-1h',
             until: 'now',
-            target:'randomWalk(%27random%20walk2%27)'
+            target:'randomWalk(%27random%20walk2%27)',
+            interval: '5' // secs
           }
         },
         style: {
@@ -55,7 +56,7 @@ angular.module('app')
         }
       },
       {
-        name: 'graphiteRP',
+        name: 'rickshawRealDataAlpha',
         directive: 'graphite',
         dataAttrName: 'graphite',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -65,6 +66,23 @@ angular.module('app')
             from:'-6h',
             until: 'now',
             target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp*.os.cpu.usage'
+          }
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'rickshawRealDataBeta',
+        directive: 'graphite',
+        dataAttrName: 'graphite',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target:'stats.amers.beta-ntc-cell.eed-erp-cprp.ntcs-erpcprp01.os.cpu.usage'
           }
         },
         style: {
