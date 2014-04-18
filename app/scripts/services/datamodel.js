@@ -113,6 +113,9 @@ angular.module('app.service')
 
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
     
+      // Default Random walk if no target provided
+      params.target || (params.target = 'randomWalk(%27random%20walk2%27)');
+
       // Default polling interval is 30 seconds
       var interval = params.interval;
       interval || (interval = 30);
@@ -120,9 +123,6 @@ angular.module('app.service')
       this.callGraphite = function () {
         
          var params = this.dataModelOptions.params;
-
-        //AW When real graphite data in alpha having a bad day, don't forget random walk 
-        // target: 'randomWalk(%27random%20walk2%27)',
       
         $http.get(params.url, { params: {
           // TODO support target being specified multiple times, which we can't pass in this hash method!
@@ -200,6 +200,23 @@ angular.module('app.service')
       this.intervalPromise = $interval(function () {
         this.callGraphite();
       }.bind(this), interval * 1000);
+      
+      // Target updated by options dialog. Copied from Meteor below
+      GraphiteTimeSeriesDataModel.prototype.update = function (target) {
+        // target || (target = this.dataModelOptions.params.target);
+        
+        this.dataModelOptions.params.target = target;
+        
+        this.callGraphite();
+        
+        // var that = this;
+        // 
+        // this.ddp.watch(collection, function(value) {
+        //   //console.log(value);
+        //   that.updateScope(value);
+        //   that.widgetScope.$apply();
+        // });
+      }.bind(this);
       
     };
 

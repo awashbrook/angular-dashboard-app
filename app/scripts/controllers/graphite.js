@@ -3,19 +3,20 @@
 angular.module('app')
   .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel, RandomTopNDataModel) {
     var widgetDefinitions = [
-      {
-        name: 'nvd3-stacked-area-chart',
-        attrs: {
-          data: 'stackedAreaChartData',
-          height: '400',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()'
-        },
-        style: {
-          width: '50%'
-        }
-      },
+      // {
+      //   name: 'nvd3-stacked-area-chart',
+      //   attrs: {
+      //     data: 'stackedAreaChartData',
+      //     height: '400',
+      //     showXAxis: 'true',
+      //     showYAxis: 'true',
+      //     xAxisTickFormat: 'xAxisTickFormat()'
+      //   },
+      //   style: {
+      //     width: '50%'
+      //   }
+      // },
+      
 //AW
 //                 <graphite url="http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/"
 //                 annotations="[]"
@@ -24,7 +25,7 @@ angular.module('app')
 //                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
 //                 ></graphite>
 //  
-      //      
+      // Graphite Alpha real data is down!
       // {
       //   name: 'graphite',
       //   attrs: {
@@ -37,41 +38,6 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      {
-        name: 'graphiteRandomWalk',
-        directive: 'graphite',
-        dataAttrName: 'graphite',
-        dataModelType: GraphiteTimeSeriesDataModel,
-        dataModelOptions: {
-          params: {
-            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-            from:'-1h',
-            until: 'now',
-            target:'randomWalk(%27random%20walk2%27)',
-            interval: '5' // secs
-          }
-        },
-        style: {
-          width: '50%'
-        }
-      },
-      {
-        name: 'rickshawRealDataAlpha',
-        directive: 'graphite',
-        dataAttrName: 'graphite',
-        dataModelType: GraphiteTimeSeriesDataModel,
-        dataModelOptions: {
-          params: {
-            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-            from:'-6h',
-            until: 'now',
-            target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp*.os.cpu.usage'
-          }
-        },
-        style: {
-          width: '50%'
-        }
-      },
       {
         name: 'rickshawRealDataBeta',
         directive: 'graphite',
@@ -90,11 +56,21 @@ angular.module('app')
         }
       },
       {
-        name: 'wt-top-n',
-        dataAttrName: 'data',
-        dataModelType: RandomTopNDataModel,
+        name: 'graphiteRandomWalk',
+        directive: 'graphite',
+        dataAttrName: 'graphite',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            target:'randomWalk(%27random%20walk2%27)',
+            interval: '5' // secs
+          }
+        },
         style: {
-          width: '30%'
+          width: '50%'
         }
       }
     ];
