@@ -19,12 +19,19 @@ function query(callback, bucket) {
     .toArray(callback);
 }
 
-MongoClient.connect('mongodb://localhost:27017/etl_sample1', function (err, db) {
+//AW Code working from earlier project with mongodb
+// var server = new mongodb.Server('192.168.0.6', 27017);
+// new mongodb.Db('my-website', server).open(function (err,client) {
+//   if (err) throw err;
+//   console.log('\033[96m + \033[39m connected to mongodb');
+  
+MongoClient.connect('mongodb://192.168.0.6:27017/ada-sample', function (err, db) {
   etlDb = db;
   if (err) {
     return console.dir(err);
   }
 
+  console.log('\033[96m + \033[39m Connected to mongodb');
 
   var collection = db.collection('apacheAggregates');
 
@@ -55,6 +62,8 @@ MongoClient.connect('mongodb://localhost:27017/etl_sample1', function (err, db) 
 
 function data(req, res) {
   query(function (err, items) {
+    console.log('\033[96m + \033[39m in app.mongo.data(): ' + items);
+    
     var response = _.map(items, function (item) {
       return {
         timestamp: item.dimensions.timestamp.getTime(),
