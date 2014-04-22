@@ -5,7 +5,7 @@ angular.module('app')
 
     var widget = $scope.widget;
 
-    if (widget && widget.dataModel) {
+  if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
     
       // TODO introduce accessors on model
       var oldTarget = widget.dataModelOptions.params.target;

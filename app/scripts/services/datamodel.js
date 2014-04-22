@@ -111,6 +111,26 @@ angular.module('app.service')
     GraphiteTimeSeriesDataModel.prototype.init = function () {
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
+      // Setup editing options for data model using widget scope using editModalOptions
+      
+      // widget = WidgetModel = dataModel.widgetScope.widget  
+      // Ref framework dashboard directive
+      // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
+      this.widgetScope.widget.editModalOptions = {
+        templateUrl: 'template/widget-template.html',
+        resolve: {
+          widget: function () {
+            return this.widgetScope.widget;
+          }.bind(this),
+          optionsTemplateUrl: function () {
+            return 'scripts/widgets/graphite/graphite-options.tpl.html';
+          }
+        },
+        controller: 'WidgetDialogCtrl'
+      };
+      
+      // Do stuff with data model parameters
+      
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
     
       // Default Random walk if no target provided
@@ -169,11 +189,13 @@ angular.module('app.service')
           for (var i = 0; i < filteredGraphiteData.length; i++) {
             if (filteredGraphiteData[i].datapoints == 0) {
               emptySeries++;
-              console.log('WARNING> Series ' + filteredGraphiteData[i].target + ' was empty from Graphite!');
+              console.warn('Series ' + filteredGraphiteData[i].target + ' was empty from Graphite!');
             }
           }
           if (emptySeries === filteredGraphiteData.length) {
-            console.log('WARNING>> ALL SERIES from Graphite were empty, skipping model updates!!');
+            //AW This is not the right behaviour if a new non-existant target has been given
+            // TODO Will leave old data on the graph if we suppress
+            console.warn('ALL SERIES from Graphite were empty, skipping model updates!');
           } else {
             console.log(JSON.stringify(filteredGraphiteData));
             WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
@@ -197,9 +219,10 @@ angular.module('app.service')
       
       this.callGraphite();
       
-      this.intervalPromise = $interval(function () {
-        this.callGraphite();
-      }.bind(this), interval * 1000);
+      // Poll for graphite updates 
+      // this.intervalPromise = $interval(function () {
+      //   this.callGraphite();
+      // }.bind(this), interval * 1000);
       
       // Target updated by options dialog. Copied from Meteor below
       GraphiteTimeSeriesDataModel.prototype.update = function (target) {

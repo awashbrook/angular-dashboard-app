@@ -3,6 +3,14 @@
 angular.module('app')
   .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel, RandomTopNDataModel) {
     var widgetDefinitions = [
+    {
+      name: 'wt-top-n',
+      dataAttrName: 'data',
+      dataModelType: RandomTopNDataModel,
+      style: {
+        width: '30%'
+      }
+    },
       // {
       //   name: 'nvd3-stacked-area-chart',
       //   attrs: {
@@ -26,20 +34,22 @@ angular.module('app')
 //                 ></graphite>
 //  
       // Graphite Alpha real data is down!
-      // {
-      //   name: 'graphite',
-      //   attrs: {
-      //     url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //     from:'-6h',
-      //     until: 'now',
-      //     target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage'
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // },
       {
-        name: 'rickshawRealDataBeta',
+        name: 'RealDataAlpha',
+        attrs: {
+          url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+          from:'-6h',
+          until: 'now',
+          target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      // CORS enabled for BETA
+      // 
+      {
+        name: 'RealCMSDataBeta',
         directive: 'graphite',
         dataAttrName: 'graphite',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -48,15 +58,34 @@ angular.module('app')
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-6h',
             until: 'now',
-            target:'stats.amers.beta-ntc-cell.eed-erp-cprp.ntcs-erpcprp01.os.cpu.usage'
+            target:'stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage'
           }
         },
         style: {
           width: '50%'
         }
       },
+      // CORS not enabled for PROD
+      // http://metrics.eikon-mon.int.thomsonreuters.com/render/?from=-6h&until=now&target=stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage
+      // {
+      //   name: 'RealADCDataProd',
+      //   directive: 'graphite',
+      //   dataAttrName: 'graphite',
+      //   dataModelType: GraphiteTimeSeriesDataModel,
+      //   dataModelOptions: {
+      //     params: {
+      //       url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
+      //       from:'-6h',
+      //       until: 'now',
+      //       target:'stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage'
+      //     }
+      //   },
+      //   style: {
+      //     width: '50%'
+      //   }
+      // },
       {
-        name: 'graphiteRandomWalk',
+        name: 'RandomWalkAlpha',
         directive: 'graphite',
         dataAttrName: 'graphite',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -87,8 +116,8 @@ angular.module('app')
       widgetButtons: true,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
-      //AW Set custom widget template for graphite directive
-      optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
+      //AW Set custom widget template for graphite directive at dasboard level
+      // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
     };
 
     // nvd3-stacked-area-chart
