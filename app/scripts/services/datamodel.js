@@ -190,7 +190,7 @@ angular.module('app.service')
 
         }.bind(this))
         .error(function (data, status) {
-            console.log('AW TODO better handling:' + status);
+            console.error('AW TODO better handling:' + data);
         });
        
       }.bind(this);
