@@ -5,22 +5,18 @@ angular.module('app')
 
     var widget = $scope.widget;
 
-  if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
+    if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
     
-      // TODO introduce accessors on model
-      var oldTarget = widget.dataModelOptions.params.target;
-      
-      $scope.target = oldTarget;
-      
+      // Target is the entire model of graphite controller
+      $scope.target  = widget.dataModel.getTarget();
+      // var oldTarget = widget.dataModelOptions.params.target;
+    
       $scope.$watch('target', function (newTarget) {
-        if (newTarget && (newTarget !== oldTarget)) {
-          // This callback is detecting and somehow logging the previous change, NOT the last one!
-          console.log(widget.title + ' graphite model options changed ' + newTarget);
-          console.log(widget.dataModel.dataModelOptions.params);
-          console.log(widget);
-          console.log(widget.dataModel);
-          widget.dataModel.update(newTarget);
-        }
+        console.log(widget.title + ' graphite model options changed ' + newTarget);
+        widget.dataModel.setTarget(newTarget);
+        // Log after updates ... the widget dataModelOptions are a snapshot from initial state of dashboard
+        // They are not updated like the data source...so this can be misleading?!!!
+        console.log(widget);
       });
 
       // What's this

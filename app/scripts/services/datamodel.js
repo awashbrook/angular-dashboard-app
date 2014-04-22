@@ -117,7 +117,7 @@ angular.module('app.service')
       // Ref framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html',
+        templateUrl: 'template/widget-template.html', // does this resolve from app rather than UI FW?
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
@@ -224,14 +224,19 @@ angular.module('app.service')
       //   this.callGraphite();
       // }.bind(this), interval * 1000);
       
-      // Target updated by options dialog. Copied from Meteor below
-      GraphiteTimeSeriesDataModel.prototype.update = function (target) {
-        // target || (target = this.dataModelOptions.params.target);
+      // Target updated by options dialog. 
+      GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
+        if (newTarget && (newTarget !== this.dataModelOptions.params.target )) {
         
-        this.dataModelOptions.params.target = target;
+          this.dataModelOptions.params.target = newTarget;
+
+          // Log after updates 
+          console.log(this.dataModelOptions.params);
+          console.log(this);
         
-        this.callGraphite();
-        
+          this.callGraphite();
+        }        
+        // Copied from Meteor.update() below
         // var that = this;
         // 
         // this.ddp.watch(collection, function(value) {
@@ -241,6 +246,11 @@ angular.module('app.service')
         // });
       }.bind(this);
       
+      GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
+        // var oldTarget = widget.dataModelOptions.params.target;
+        return this.dataModelOptions.params.target;        
+      }.bind(this);
+
     };
 
     GraphiteTimeSeriesDataModel.prototype.destroy = function () {
