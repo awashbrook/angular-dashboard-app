@@ -244,12 +244,12 @@ angular.module('app.service')
         //   that.updateScope(value);
         //   that.widgetScope.$apply();
         // });
-      }.bind(this);
+      };//.bind(this);
       
       GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
         // var oldTarget = widget.dataModelOptions.params.target;
         return this.dataModelOptions.params.target;        
-      }.bind(this);
+      };///.bind(this);
 
     };
 
