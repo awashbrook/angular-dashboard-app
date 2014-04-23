@@ -33,23 +33,26 @@ angular.module('app')
 //                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
 //                 ></graphite>
 //  
-      // Graphite Alpha real data is down!
-      // {
-      //   name: 'RealDataAlpha',
-      //   attrs: {
-      //     url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //     from:'-6h',
-      //     until: 'now',
-      //     target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage'
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // },
-      // CORS enabled for BETA
-      // 
       {
-        name: 'RealCMSDataBeta',
+        name: 'RealDataAlpha',
+        directive: 'graphite',
+        dataAttrName: 'graphite',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage'
+           }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      // CORS enabled for BETA      
+      {
+        name: 'RealDataBeta',
         directive: 'graphite',
         dataAttrName: 'graphite',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -84,24 +87,24 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      // {
-      //   name: 'RandomWalkAlpha',
-      //   directive: 'graphite',
-      //   dataAttrName: 'graphite',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-1h',
-      //       until: 'now',
-      //       target:'randomWalk(%27random%20walk2%27)',
-      //       interval: '5' // secs
-      //     }
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // }
+      {
+        name: 'RandomWalkAlpha',
+        directive: 'graphite',
+        dataAttrName: 'graphite',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            target:'randomWalk(%27random%20walk2%27)',
+            interval: '5' // secs
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      }
     ];
 
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
