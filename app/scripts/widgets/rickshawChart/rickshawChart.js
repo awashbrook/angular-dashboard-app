@@ -1,17 +1,20 @@
 'use strict';
 
 angular.module('ui.dashboard.widgets')
-  .directive('graphite', function () {
+  .directive('rickshaw', function () {
       return {
           restrict: 'EA',
           replace:  true,
-          templateUrl: 'scripts/widgets/graphite/graphite.tpl.html',
+          //AW Decided to inline the template to increase portability and self encapsulation of this widget
+          template: '<div class="graphite"><div class="chart"></div><div class="timeline"></div><div class="preview"></div></div>'
           scope: {
+              ///AW TODO Should we drop support for setting this data source specific info entirely?
               url:    '@',
               target: '@', // AW changed from '='
               from:   '@',
               until:  '@',
-              annotations: '=',
+              ///
+              annotations: '=', // AW Not used since porting from capman
               graphite: '=' //AW Manged by AD as per dataAttrName=’graphite’
           },
           // AW Factor out
@@ -95,8 +98,11 @@ angular.module('ui.dashboard.widgets')
                   graph:   graph,
                   element: timeline
               } );
-            
-              //AW TODO Update for multiple series:
+              
+              // TODO factor out into “interpreter” service translating between the formats
+              // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
+
+              //AW TODO Update for multiple series: not support today
               //datamodel.js:178 stacked series cannot have differing numbers of points: 359 vs 0; see Rickshaw.Series.fill() 
               scope.$watch('graphite', function (graphite) {
                 if (graphite) {
