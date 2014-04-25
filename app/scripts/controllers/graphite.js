@@ -3,14 +3,6 @@
 angular.module('app')
   .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel, RandomTopNDataModel) {
     var widgetDefinitions = [
-    // {
-    //   name: 'wt-top-n',
-    //   dataAttrName: 'data',
-    //   dataModelType: RandomTopNDataModel,
-    //   style: {
-    //     width: '30%'
-    //   }
-    // },
       // {
       //   name: 'nvd3-stacked-area-chart',
       //   attrs: {
@@ -25,15 +17,31 @@ angular.module('app')
       //   }
       // },
       
-//AW
-//                 <graphite url="http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/"
-//                 annotations="[]"
-//                 from="-6h"
-//                 until="now"
-//                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
-//                 ></graphite>
-//  
-      // Graphite Alpha real data is down!
+      //AW This is how Rickshaw graphite widget was invoked in previous project
+      //                 <graphite url="http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/"
+      //                 annotations="[]"
+      //                 from="-6h"
+      //                 until="now"
+      //                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
+      //                 ></graphite>
+      //  
+      // {
+      //   name: 'RandomWalkAlpha',
+      //   directive: 'graphite',
+      //   dataAttrName: 'graphite',
+      //   dataModelType: GraphiteTimeSeriesDataModel,
+      //   dataModelOptions: {
+      //     params: {
+      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+      //       from:'-1h',
+      //       until: 'now',
+      //       target:'randomWalk(%27random%20walk2%27)',
+      //     }
+      //   },
+      //   style: {
+      //     width: '50%'
+      //   }
+      // },
       // {
       //   name: 'RealDataAlpha',
       //   attrs: {
@@ -50,15 +58,32 @@ angular.module('app')
       // 
       {
         name: 'RealCMSDataBeta',
-        directive: 'graphite',
-        dataAttrName: 'graphite',
+        directive: 'rickshaw',
+        dataAttrName: 'rickshaw',
         dataModelType: GraphiteTimeSeriesDataModel,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-6h',
             until: 'now',
-            target:'stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage'
+            target:'stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.blah'
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
+        name: 'RandomWalkBeta',
+        directive: 'rickshaw',
+        dataAttrName: 'rickshaw',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            target:'randomWalk(%27random%20walk2%27)',
           }
         },
         style: {
@@ -84,24 +109,14 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      // {
-      //   name: 'RandomWalkAlpha',
-      //   directive: 'graphite',
-      //   dataAttrName: 'graphite',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-1h',
-      //       until: 'now',
-      //       target:'randomWalk(%27random%20walk2%27)',
-      //       interval: '5' // secs
-      //     }
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // }
+      {
+        name: 'wt-top-n',
+        dataAttrName: 'data',
+        dataModelType: RandomTopNDataModel,
+        style: {
+          width: '30%'
+        }
+      }
     ];
 
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {

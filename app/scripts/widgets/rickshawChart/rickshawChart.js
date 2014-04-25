@@ -5,8 +5,8 @@ angular.module('ui.dashboard.widgets')
       return {
           restrict: 'EA',
           replace:  true,
-          //AW Decided to inline the template to increase portability and self encapsulation of this widget
-          template: '<div class="graphite"><div class="chart"></div><div class="timeline"></div><div class="preview"></div></div>'
+          //AW Decided to inline the trivial template to increase portability and self encapsulation of this widget
+          template: '<div class="graphite"><div class="chart"></div><div class="timeline"></div><div class="preview"></div></div>',
           scope: {
               ///AW TODO Should we drop support for setting this data source specific info entirely?
               url:    '@',
@@ -21,7 +21,6 @@ angular.module('ui.dashboard.widgets')
           controller: ['$scope', '$rootScope', '$timeout', 'Gateway', function ($scope, $rootScope, $timeout, Gateway) {
 
               //JM todo: implement a Rickshaw.Graph.Promise similar to Rickshaw.Graph.AJAX
-              $scope.fetchSeriesData = Gateway.fetchRickshawSeries;
               
               var renderingScheduled;
               $rootScope.$watch('windowWidth', function () {
@@ -102,38 +101,41 @@ angular.module('ui.dashboard.widgets')
               // TODO factor out into “interpreter” service translating between the formats
               // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
 
-              //AW TODO Update for multiple series: not support today
+              //AW TODO Update for multiple series: not supported today
               //datamodel.js:178 stacked series cannot have differing numbers of points: 359 vs 0; see Rickshaw.Series.fill() 
-              scope.$watch('graphite', function (graphite) {
-                if (graphite) {
-                  var rickshawSeries = _.map(graphite, function(result) {
-                    /*AW Convert to Rickshaw Series
-                    Sample Rickshaw Series
-                    {
-                        name: "Convergence",
-                        data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
-                    },
-                    {
-                        name: "Divergence",
-                        data: [{x:1, y: 5}, {x:2, y:2}, {x:3, y:9}]
-                    }*/
-
-                    return {
-                        color: '#6060c0',
-                        data:   _.map(result.datapoints, function(datapoint) {
-                            return {
-                                x: datapoint[1],
-                                y: datapoint[0]
-                              };
-                          }),
-                        name: result.target
-                      };
-                  });
-                  // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
-                  scope.updateWith(rickshawSeries);
+              scope.$watch('rickshaw', function (rickshaw) {
+                if (rickshaw) {
+                  // var rickshawSeries = _.map(graphite, function(result) {
+                  //   /*AW Convert to Rickshaw Series
+                  //   Sample Rickshaw Series
+                  //   {
+                  //       name: "Convergence",
+                  //       data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
+                  //   },
+                  //   {
+                  //       name: "Divergence",
+                  //       data: [{x:1, y: 5}, {x:2, y:2}, {x:3, y:9}]
+                  //   }*/
+                  // 
+                  //   return {
+                  //       color: '#6060c0',
+                  //       data:   _.map(result.datapoints, function(datapoint) {
+                  //           return {
+                  //               x: datapoint[1],
+                  //               y: datapoint[0]
+                  //             };
+                  //         }),
+                  //       name: result.target
+                  //     };
+                  // });
+                  console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+                  scope.updateWith(rickshaw);
                   scope.render();
                 }
               });
+
+              //AW TODO Update for multiple series: not supported today
+              //datamodel.js:178 stacked series cannot have differing numbers of points: 359 vs 0; see Rickshaw.Series.fill() 
 
               // //JM update methods
               // scope.fetchRickshawSeriesData(scope.url, scope.target, scope.from, scope.until).then(function(series) {

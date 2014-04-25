@@ -114,16 +114,16 @@ angular.module('app.service')
       // Setup editing options for data model using widget scope using editModalOptions
       
       // widget = WidgetModel = dataModel.widgetScope.widget  
-      // Ref framework dashboard directive
+      // Ref parent framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html', // does this resolve from app rather than UI FW?
+        templateUrl: 'template/widget-template.html', // from parent dashbaord framewor
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
           }.bind(this),
           optionsTemplateUrl: function () {
-            return 'scripts/widgets/graphite/graphite-options.tpl.html';
+            return 'template/graphiteOptions.html';
           }
         },
         controller: 'WidgetDialogCtrl'
@@ -133,26 +133,34 @@ angular.module('app.service')
       
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
     
+      //AW TODO do I really like this :)
       // Default Random walk if no target provided
-      params.target || (params.target = 'randomWalk(%27random%20walk2%27)');
+      params.target || (params.target = [
+        'randomWalk(%27random%20walk1%27)',
+        'randomWalk(%27random%20walk2%27)',
+        'randomWalk(%27random%20walk3%27)'
+      ]);
 
       // Default polling interval is 30 seconds
-      var interval = params.interval;
-      interval || (interval = 30);
+      // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
+      // https://github.com/angular/angular.js/blob/ffe5115355baa6ee2136b6fb5e4828e4e2fa58f8/src/ng/interval.js#L133
+      var interval = params.interval || (interval = 30);
       
+      // Main function to call graphite and update $scope.graphite in data model 
       this.callGraphite = function () {
         
-         var params = this.dataModelOptions.params;
-      
+        var params = this.dataModelOptions.params;
+        
         $http.get(params.url, { params: {
-          // TODO support target being specified multiple times, which we can't pass in this hash method!
+          //AW As per https://github.com/angular/angular.js/pull/1364
+          // target may be being specified multiple times as an array which graphite requires
           target: params.target,
           from: params.from,
           until: params.until,
           format: 'json' // AW
         }})
         .success(function (graphiteData) {
-          console.log('Graphite Responded');
+          // console.log('Graphite Responded');
           // console.log(JSON.stringify(graphiteData));
           
           // Strip out null data points: this is how we did it dashing with Ruby
@@ -176,6 +184,15 @@ angular.module('app.service')
           //   stats[:datapoints] = non_nil_points 
           // end
         
+          //AW Below partially iterative doesn't work because looping over function is BAD!
+          // for (var i = 0; i < graphiteData.length; i++) {
+          //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
+          //   if (non_nil_points.length == 0) { 
+          //     console.log('>> WARNING >> All data was Null from Graphite!');
+          //   } 
+          //   graphiteData[i].datapoints = non_nil_points;
+          // }          
+        
           var filteredGraphiteData = _.map(graphiteData, function(stats) {
             return {
               target: stats.target,
@@ -195,20 +212,18 @@ angular.module('app.service')
           if (emptySeries === filteredGraphiteData.length) {
             //AW This is not the right behaviour if a new non-existant target has been given
             // TODO Will leave old data on the graph if we suppress
-            console.warn('ALL SERIES from Graphite were empty, skipping model updates!');
-          } else {
-            console.log(JSON.stringify(filteredGraphiteData));
-            WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+            // console.warn('ALL SERIES from Graphite were empty, skipping model updates!');
+            console.warn('Graphite responded with NO DATA, invalid targets may have been specified: ' + this.getTarget() );
+          }  else {
+            // If Data received, then poll for updates...
+            
+            // Enable poll for pseudo-real-time graphite updates 
+            this.intervalPromise = $interval(this.callGraphite, interval * 1000);
           }
-
-          //AW Below partially iterative doesn't work because looping over function is BAD!
-          // for (var i = 0; i < graphiteData.length; i++) {
-          //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
-          //   if (non_nil_points.length == 0) { 
-          //     console.log('>> WARNING >> All data was Null from Graphite!');
-          //   } 
-          //   graphiteData[i].datapoints = non_nil_points;
-          // }          
+          
+          // TODO Empty update should propagate to graph 
+          console.log(JSON.stringify(filteredGraphiteData));
+          WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
 
         }.bind(this))
         .error(function (data, status) {
@@ -219,12 +234,8 @@ angular.module('app.service')
       
       this.callGraphite();
       
-      // Poll for graphite updates 
-      // this.intervalPromise = $interval(function () {
-      //   this.callGraphite();
-      // }.bind(this), interval * 1000);
+      // Accessors used by graphite options dialog
       
-      // Target updated by options dialog. 
       GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
         if (newTarget && (newTarget !== this.dataModelOptions.params.target )) {
         
@@ -235,29 +246,71 @@ angular.module('app.service')
           console.log(this);
         
           this.callGraphite();
-        }        
-        // Copied from Meteor.update() below
-        // var that = this;
-        // 
-        // this.ddp.watch(collection, function(value) {
-        //   //console.log(value);
-        //   that.updateScope(value);
-        //   that.widgetScope.$apply();
-        // });
+        }
       };//.bind(this);
       
       GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
         // var oldTarget = widget.dataModelOptions.params.target;
-        return this.dataModelOptions.params.target;        
+        return this.dataModelOptions.params.target;
       };///.bind(this);
 
+      // New Helper to transform data from graphite to rickshaw / nvd3
+   
+      // Meteor apply below not best practice and will lose errors from updateScope() 
+      // this.ddp.watch(collection, function(doc, msg) {
+      //   if (msg === 'added') {
+      //     that.updateScope(doc);
+      //     that.widgetScope.$apply();
+      //   }
+      // });
+
+      // $scope.$watch('target', function (newTarget) {
+      this.widgetScope.$watch('graphite', function(graphite) {
+        console.log(graphite);
+        
+        // TODO factor out into “interpreter” service translating between the formats
+        // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
+
+          if (graphite) {
+            var rickshawSeries = _.map(graphite, function(result) {
+              /*AW Convert to Rickshaw Series
+              Sample Rickshaw Series
+              {
+                  name: "Convergence",
+                  data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
+              },
+              {
+                  name: "Divergence",
+                  data: [{x:1, y: 5}, {x:2, y:2}, {x:3, y:9}]
+              }*/
+
+              return {
+                  color: '#6060c0',
+                  data:   _.map(result.datapoints, function(datapoint) {
+                      return {
+                          x: datapoint[1],
+                          y: datapoint[0]
+                        };
+                    }),
+                  name: result.target
+                };
+            });
+            // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+            
+            $scope.$apply(function() {
+              $scope.(this.dataModelAttr) // Will be rickshaw or nvd3
+              
+              // this.updateScope(graphiteData);
+            }.bind(this));      
+      });
+      
     };
 
     GraphiteTimeSeriesDataModel.prototype.destroy = function () {
       WidgetDataModel.prototype.destroy.call(this);
       $interval.cancel(this.intervalPromise);
     };
-
+    
     return GraphiteTimeSeriesDataModel;
   })
   .factory('MeteorTimeSeriesDataModel', function (settings, MeteorDdp, WidgetDataModel) {
