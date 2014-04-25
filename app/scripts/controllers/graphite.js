@@ -56,23 +56,23 @@ angular.module('app')
       // },
       // CORS enabled for BETA
       // 
-      {
-        name: 'RealCMSDataBeta',
-        directive: 'rickshaw',
-        dataAttrName: 'rickshaw',
-        dataModelType: GraphiteTimeSeriesDataModel,
-        dataModelOptions: {
-          params: {
-            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
-            from:'-6h',
-            until: 'now',
-            target:'stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.blah'
-          }
-        },
-        style: {
-          width: '400px'
-        }
-      },
+      // {
+      //   name: 'RealCMSDataBeta',
+      //   directive: 'rickshaw',
+      //   dataAttrName: 'rickshaw',
+      //   dataModelType: GraphiteTimeSeriesDataModel,
+      //   dataModelOptions: {
+      //     params: {
+      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+      //       from:'-6h',
+      //       until: 'now',
+      //       target:'stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.blah'
+      //     }
+      //   },
+      //   style: {
+      //     width: '400px'
+      //   }
+      // },
       {
         name: 'RandomWalkBeta',
         directive: 'rickshaw',
@@ -110,7 +110,7 @@ angular.module('app')
       //   }
       // },
       {
-        name: 'wt-top-n',
+        name: 'wt-top-n', 
         dataAttrName: 'data',
         dataModelType: RandomTopNDataModel,
         style: {

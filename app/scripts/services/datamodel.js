@@ -221,9 +221,14 @@ angular.module('app.service')
             this.intervalPromise = $interval(this.callGraphite, interval * 1000);
           }
           
-          // TODO Empty update should propagate to graph 
+          // TODO Empty update should propagate to graph
           console.log(JSON.stringify(filteredGraphiteData));
-          WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+          // Update new graphite target
+          // this.widgetScope.$apply(function() {
+            // this.widgetScope.graphite = filteredGraphiteData; // TODO AW NOW Trying to get original callback working
+            WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+          // }.bind(this)); 
+          
 
         }.bind(this))
         .error(function (data, status) {
@@ -295,14 +300,15 @@ angular.module('app.service')
                   name: result.target
                 };
             });
-            // console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+            console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
             
-            $scope.$apply(function() {
-              $scope.(this.dataModelAttr) // Will be rickshaw or nvd3
-              
-              // this.updateScope(graphiteData);
-            }.bind(this));      
-      });
+//             this.widgetScope.$apply(function() {
+              // this.widgetScope.rickshaw = rickshawSeries; 
+              WidgetDataModel.prototype.updateScope.call(this, rickshawSeries);              
+              // this.updateScope(rickshawSeries);
+//             }.bind(this)); 
+          }     
+      }.bind(this)); 
       
     };
 
