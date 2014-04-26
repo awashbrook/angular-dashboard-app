@@ -15,7 +15,8 @@ angular.module('ui.dashboard.widgets')
               until:  '@',
               ///
               annotations: '=', // AW Not used since porting from capman
-              graphite: '=' //AW Manged by AD as per dataAttrName=’graphite’
+              ///
+              rickshaw: '=' //AW MUST match data attribute name specified in dashboard directive dataAttrName=’rickshaw’
           },
           // AW Factor out
           controller: ['$scope', '$rootScope', '$timeout', 'Gateway', function ($scope, $rootScope, $timeout, Gateway) {
@@ -103,6 +104,7 @@ angular.module('ui.dashboard.widgets')
 
               //AW TODO Update for multiple series: not supported today
               //datamodel.js:178 stacked series cannot have differing numbers of points: 359 vs 0; see Rickshaw.Series.fill() 
+              // You have to watch the attribute "=" specifieed in isolatescope as '=' rickshaw !!
               scope.$watch('rickshaw', function (rickshaw) {
                 if (rickshaw) {
                   // var rickshawSeries = _.map(graphite, function(result) {
@@ -128,7 +130,7 @@ angular.module('ui.dashboard.widgets')
                   //       name: result.target
                   //     };
                   // });
-                  console.log("Received Rickshaw Series" + JSON.stringify(rickshawSeries));
+                  console.log("Received Rickshaw Series" + JSON.stringify(rickshaw));
                   scope.updateWith(rickshaw);
                   scope.render();
                 }

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel) {
+  .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
         name: 'wt-time',
@@ -94,22 +94,11 @@ angular.module('app')
           data: 'pieChartData'
         }
       },
-//AW
-//                 <graphite url="http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/"
-//                 annotations="[]"
-//                 from="-6h"
-//                 until="now"
-//                 target="stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage"
-//                 ></graphite>
-//       
       {
-        name: 'graphite',
-        attrs: {
-          url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-          from:'-6h',
-          until: 'now',
-          target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage'
-        },
+        name: 'CannedGraphite',
+        directive: 'rickshaw',
+        dataAttrName: 'rickshaw',
+        dataModelType: SampleGraphiteTimeSeriesDataModel,
         style: {
           width: '50%'
         }
