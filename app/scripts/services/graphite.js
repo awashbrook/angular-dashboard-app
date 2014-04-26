@@ -187,19 +187,27 @@ angular.module('app.service')
 
     SampleGraphiteTimeSeriesDataModel.prototype.init = function () {
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
-    
-      var i = 0;
-      
+
       // Main function to call graphite and update $scope.graphite in data model 
       this.callGraphite = function () {
-        
+        console.log('Propagating Graphite Series');
         console.log(JSON.stringify(graphiteSampleData));
-        // WidgetDataModel.prototype.updateScope.call(this, graphiteSampleData);
-        this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
-        i++;
+        this.widgetScope.graphite = graphiteSampleData;
       }.bind(this);
             
       this.callGraphite();
+      
+      // var i = 0;
+      // 
+      // // Main function to call graphite and update $scope.graphite in data model 
+      // this.callGraphite = function () {
+      //   
+      //   console.log(JSON.stringify(graphiteSampleData));
+      //   this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
+      //   i++;
+      // }.bind(this);
+      //       
+      // this.callGraphite();
       
       // Enable poll for pseudo-real-time graphite updates 
       this.intervalPromise = $interval(this.callGraphite, 5 * 1000);
@@ -218,9 +226,8 @@ angular.module('app.service')
               // 1393940460
               // NVD3 uses milliseconds since epoch
               // 1062302400000
-              
-              /*AW Convert to NVD3 Series
               // Sample NVD3 Series
+              /*AW Convert to NVD3 Series
                [
                 {
                   key: 'Series 1',
@@ -240,27 +247,6 @@ angular.module('app.service')
                   key: result.target
                 };
             });
-            //    return {
-            //       color: '#6060c0',
-            //       data:   _.map(result.datapoints, function(datapoint) {
-            //           return {
-            //               x: datapoint[1],
-            //               y: datapoint[0]
-            //             };
-            //         }),
-            //       name: result.target
-            //     };
-            // });
-            //               /*AW Convert to Rickshaw Series
-            //               Sample Rickshaw Series
-            //               {
-            //                   name: "Convergence",
-            //                   data: [{x:1, y: 4}, {x:2, y:27}, {x:3, y:6}]
-            //               },
-            //               {
-            //                   name: "Divergence",
-            //                   data: [{x:1, y: 5}, {x:2, y:2}, {x:3, y:9}]
-            //               }*/
             console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
             WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
           }     
