@@ -94,11 +94,27 @@ angular.module('app')
           data: 'pieChartData'
         }
       },
+      // {
+      //   name: 'rickshawGraphite',
+      //   directive: 'rickshaw',
+      //   dataAttrName: 'rickshaw',
+      //   dataModelType: SampleGraphiteTimeSeriesDataModel,
+      //   style: {
+      //     width: '50%'
+      //   }
+      // },
       {
-        name: 'CannedGraphite',
-        directive: 'rickshaw',
-        dataAttrName: 'rickshaw',
+        name: 'nvd3Graphite',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
         dataModelType: SampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          // data: 'stackedAreaChartData',
+          height: '400',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
         style: {
           width: '50%'
         }
