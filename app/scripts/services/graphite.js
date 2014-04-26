@@ -19,7 +19,7 @@ angular.module('app.service')
       // Ref parent framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html', // from parent dashboard framework
+        templateUrl: 'template/widget-template.html', // from parent dashbaord framewor
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
@@ -220,47 +220,44 @@ angular.module('app.service')
     };
     
     return GraphiteTimeSeriesDataModel;
-  })
+  });
 
     
 
     
-    / AW Jan's Rickshaw series Graphite controller from Capman
+    // AW Jan's Rickshaw series Graphite controller from Capman
     // Not ideal with params from directive scope passed...
     // How can we better share data between directive scope and utility functions in services?!  
     
     // This is NOT USED, for the record only
-    
-    fetchRickshawSeries: function(url, target, from, until) {
-      var deferred = $q.defer();
-
-      $http.get(url, { params: {
-          target: target,
-          from: from,
-          until: until,
-          format: 'json' // AW
-      }}).success(function (data) {
-          var seriesData = _.map(data, function(result) {
-              return {
-                  color: '#6060c0',
-                  data:   _.map(result.datapoints, function(datapoint) {
-                      return {
-                          x: datapoint[1],
-                          y: datapoint[0]
-                      };
-                  }),
-                  name: result.target
-              };
-          });
-
-          deferred.resolve(seriesData);
-      }).
-      error(function (data, status) {
-          deferred.reject(status);
-      });
-
-      return deferred.promise;
-    }
-
-
-  }
+    // 
+    // fetchRickshawSeries: function(url, target, from, until) {
+    //   var deferred = $q.defer();
+    // 
+    //   $http.get(url, { params: {
+    //       target: target,
+    //       from: from,
+    //       until: until,
+    //       format: 'json' // AW
+    //   }}).success(function (data) {
+    //       var seriesData = _.map(data, function(result) {
+    //           return {
+    //               color: '#6060c0',
+    //               data:   _.map(result.datapoints, function(datapoint) {
+    //                   return {
+    //                       x: datapoint[1],
+    //                       y: datapoint[0]
+    //                   };
+    //               }),
+    //               name: result.target
+    //           };
+    //       });
+    // 
+    //       deferred.resolve(seriesData);
+    //   }).
+    //   error(function (data, status) {
+    //       deferred.reject(status);
+    //   });
+    // 
+    //   return deferred.promise;
+    // }
