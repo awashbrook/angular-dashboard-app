@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('RestDataCtrl', function ($scope, webSocket, Gateway, settings, RestTimeSeriesDataModel) {
+  .controller('RestDataCtrl', function ($scope, settings, RestTimeSeriesDataModel, RestTopNDataModel) {
     var widgetDefs = [
       {
         name: 'Line Chart Minutes',
@@ -30,25 +30,91 @@ angular.module('app')
         style: {
           width: '50%'
         }
+      },
+      {
+        name: 'Line Chart',
+        directive: 'wt-historical-chart',
+        dataAttrName: 'chart',
+        dataModelType: RestTimeSeriesDataModel,
+        dataModelOptions: {
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'Countries',
+        directive: 'wt-top-n',
+        dataAttrName: 'data',
+        dataModelType: RestTopNDataModel,
+        dataModelOptions: {
+          dimension: 'geoip_country_name',
+          limit: 20
+        },
+        style: {
+          width: '33%'
+        }
+      },
+      {
+        name: 'Cities',
+        directive: 'wt-top-n',
+        dataAttrName: 'data',
+        dataModelType: RestTopNDataModel,
+        dataModelOptions: {
+          dimension: 'geoip_city_name',
+          limit: 20
+        },
+        style: {
+          width: '33%'
+        }
+      },
+      {
+        name: 'Browsers',
+        directive: 'wt-top-n',
+        dataAttrName: 'data',
+        dataModelType: RestTopNDataModel,
+        dataModelOptions: {
+          dimension: 'agentinfo_name',
+          limit: 20
+        },
+        style: {
+          width: '33%'
+        }
       }
     ];
 
     var defaultWidgets = [
       {
-        name: 'Line Chart Minutes',
-        title: 'MongoDB Historical Data - Minutes'
+        name: 'Line Chart',
+        title: 'Visits',
+        dataModelOptions: {
+          metric: 'count'
+        }
       },
       {
-        name: 'Line Chart Hours',
-        title: 'MongoDB Historical Data - Hours'
+        name: 'Line Chart',
+        title: 'Bandwidth',
+        dataModelOptions: {
+          metric: 'bandwidth'
+        }
+      },
+      {
+        name: 'Countries',
+        title: 'Countries'
+      },
+      {
+        name: 'Cities',
+        title: 'Cities'
+      },
+      {
+        name: 'Browsers',
+        title: 'Browsers'
       }
     ];
 
     $scope.dashboardOptions = {
-      //useLocalStorage: true, //TODO enable by default
       widgetButtons: true,
       widgetDefinitions: widgetDefs,
-      defaultWidgets: defaultWidgets,
-      //optionsTemplateUrl: 'template/widgetOptions.html'
+      defaultWidgets: defaultWidgets
     };
   });

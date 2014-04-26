@@ -29,7 +29,9 @@ app.get('/settings.js', function(req, res) {
   res.send('window.settings = ' + JSON.stringify(config.settings) + ';');
 });
 
-// app.get('/data', mongo.data);
+//app.get('/data', mongo.data);
+//app.get('/all', mongo.all);
+//app.get('/topn', mongo.topn);
 
 http.createServer(app).listen(config.port, function(){
     console.log('Express server listening on port ' + config.port);

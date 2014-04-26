@@ -1,7 +1,9 @@
 angular-dashboard
 =================
 
-Dashboard/Widgets functionality with AngularJS.
+[![Build Status](https://travis-ci.org/nickholub/angular-dashboard-app.svg?branch=master)](https://travis-ci.org/nickholub/angular-dashboard-app)
+
+Dashboard/Widgets functionality with AngularJS (Demo application for [https://github.com/nickholub/angular-ui-dashboard](https://github.com/nickholub/angular-ui-dashboard)).
 
  Features:
 
