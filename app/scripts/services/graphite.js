@@ -180,7 +180,7 @@ angular.module('app.service')
     
     return GraphiteTimeSeriesDataModel;
   })
-  .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData) {
+  .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function SampleGraphiteTimeSeriesDataModel() {}
     
     SampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -189,75 +189,90 @@ angular.module('app.service')
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
       // Main function to call graphite and update $scope.graphite in data model 
+      // this.callGraphite = function () {
+      //   console.log('Propagating Graphite Series');
+      //   console.log(JSON.stringify(graphiteSampleData));
+      //   this.widgetScope.graphite = graphiteSampleData;
+      // }.bind(this);
+      
+      var i = 0;
+      
+      // Main function to call graphite and update $scope.graphite in data model 
       this.callGraphite = function () {
-        console.log('Propagating Graphite Series');
+        
         console.log(JSON.stringify(graphiteSampleData));
-        this.widgetScope.graphite = graphiteSampleData;
+        this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
+        i++;
       }.bind(this);
             
       this.callGraphite();
-      
-      // var i = 0;
-      // 
-      // // Main function to call graphite and update $scope.graphite in data model 
-      // this.callGraphite = function () {
-      //   
-      //   console.log(JSON.stringify(graphiteSampleData));
-      //   this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
-      //   i++;
-      // }.bind(this);
-      //       
-      // this.callGraphite();
       
       // Enable poll for pseudo-real-time graphite updates 
       this.intervalPromise = $interval(this.callGraphite, 5 * 1000);
       
       // $scope.$watch('target', function (newTarget) {
       this.widgetScope.$watch('graphite', function(graphite) {
-        console.log(graphite);
+        console.log(graphite);        
+/*
+        TODO factor out into “interpreter” service translating between the formats
+        so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
+*/        
+        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));
         
-        // TODO factor out into “interpreter” service translating between the formats
-        // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
-
-          if (graphite) {
-            var nvd3Series = _.map(graphite, function(result) {
-              // All chart libraries use Unix epoch 
-              // Graphite uses second since epoch
-              // 1393940460
-              // NVD3 uses milliseconds since epoch
-              // 1062302400000
-              // Sample NVD3 Series
-              /*AW Convert to NVD3 Series
-               [
-                {
-                  key: 'Series 1',
-                  values: [
-                    [ 1051675200000 , 0] ,
-                    [ 1054353600000 , 7.2481659343222] ,
-                    [ 1056945600000 , 9.2512381306992] ,
-                    [ 1059624000000 , 11.341210982529] ,
-              }*/
-              return {
-                  values:   _.map(result.datapoints, function(datapoint) {
-                      return [
-                          datapoint[1] * 1000,
-                          datapoint[0]
-                          ];
-                    }),
-                  key: result.target
-                };
-            });
-            console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
-            WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
-          }     
       }.bind(this));
-    }
+    };
   
     SampleGraphiteTimeSeriesDataModel.prototype.destroy = function () {
       WidgetDataModel.prototype.destroy.call(this);
       $interval.cancel(this.intervalPromise);
     };
     return SampleGraphiteTimeSeriesDataModel;
+  })
+  .factory('Graphite2NVD3', function () {
+    function Graphite2NVD3() {}
+
+    // console.log(graphite);
+    // this.widgetScope.$watch('graphite', function(graphite) {
+    
+    Graphite2NVD3.convert = function (graphite) {
+      var nvd3Series;
+      if (graphite) {
+        nvd3Series = _.map(graphite, function(result) {
+          // All chart libraries use Unix epoch 
+          // Graphite uses second since epoch
+          // 1393940460
+          // NVD3 uses milliseconds since epoch
+          // 1062302400000
+          // Sample NVD3 Series
+          /*AW Convert to NVD3 Series
+           [
+            {
+              key: 'Series 1',
+              values: [
+                [ 1051675200000 , 0] ,
+                [ 1054353600000 , 7.2481659343222] ,
+                [ 1056945600000 , 9.2512381306992] ,
+                [ 1059624000000 , 11.341210982529] ,
+          }*/
+          return {
+              values:   _.map(result.datapoints, function(datapoint) {
+                  return [
+                      datapoint[1] * 1000,
+                      datapoint[0]
+                      ];
+                }),
+              key: result.target
+            };
+        });
+        console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
+        // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
+      }
+      return nvd3Series;
+         
+      // }.bind(this));
+    };
+        
+    return Graphite2NVD3;
   })
   // i = 0
   // 
