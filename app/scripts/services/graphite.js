@@ -4,7 +4,7 @@
 // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
 
 angular.module('app.service')
-  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, $http, $interval) {
+  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
     function GraphiteTimeSeriesDataModel() {
     }
 
@@ -62,7 +62,7 @@ angular.module('app.service')
           format: 'json' // AW
         }})
         .success(function (graphiteData) {
-          // console.log('Graphite Responded');
+          console.log('Graphite Responded');
           // console.log(JSON.stringify(graphiteData));
           
           // Strip out null data points: this is how we did it dashing with Ruby
@@ -117,21 +117,21 @@ angular.module('app.service')
             // console.warn('ALL SERIES from Graphite were empty, skipping model updates!');
             console.warn('Graphite responded with NO DATA, invalid targets may have been specified: ' + this.getTarget() );
           }  else {
-            // If Data received, then poll for updates...
-            
-            // Enable poll for pseudo-real-time graphite updates 
+            // If Data received, then poll for updates...enable pseudo-real-time graphite updates 
             this.intervalPromise = $interval(this.callGraphite, interval * 1000);
           }
           
-          // TODO Empty update should propagate to graph
+          // Empty updates should still propagate to graph and clear of give "No Data Available"
+            // This works really well with NVD3 giving "No Data Available" and leaving old data set up!
+            // TODO: Does NOT work with Rickshaw which chokes on empty series today!
+          
           console.log(JSON.stringify(filteredGraphiteData));
           // Update new graphite target
           // this.widgetScope.$apply(function() {
             // this.widgetScope.graphite = filteredGraphiteData; // TODO AW NOW Trying to get original callback working
-            WidgetDataModel.prototype.updateScope.call(this, filteredGraphiteData);
+            WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(filteredGraphiteData));            
           // }.bind(this)); 
           
-
         }.bind(this))
         .error(function (data, status) {
             console.error('AW TODO better handling:' + data);
@@ -160,16 +160,6 @@ angular.module('app.service')
         // var oldTarget = widget.dataModelOptions.params.target;
         return this.dataModelOptions.params.target;
       };///.bind(this);
-
-      // New Helper to transform data from graphite to rickshaw / nvd3
-   
-      // Meteor apply below not best practice and will lose errors from updateScope() 
-      // this.ddp.watch(collection, function(doc, msg) {
-      //   if (msg === 'added') {
-      //     that.updateScope(doc);
-      //     that.widgetScope.$apply();
-      //   }
-      // });
       
     };
 
@@ -180,6 +170,7 @@ angular.module('app.service')
     
     return GraphiteTimeSeriesDataModel;
   })
+  // Canned Graphite Data
   .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function SampleGraphiteTimeSeriesDataModel() {}
     
@@ -228,6 +219,7 @@ angular.module('app.service')
     };
     return SampleGraphiteTimeSeriesDataModel;
   })
+  // Helper function to convert graphite series to NVD3
   .factory('Graphite2NVD3', function () {
     function Graphite2NVD3() {}
 
@@ -394,7 +386,7 @@ angular.module('app.service')
     // AW Jan's Rickshaw series Graphite controller from Capman
     // Not ideal with params from directive scope passed...
     // How can we better share data between directive scope and utility functions in services?!  
-    
+    // 
     // This is NOT USED, for the record only
     // 
     // fetchRickshawSeries: function(url, target, from, until) {
