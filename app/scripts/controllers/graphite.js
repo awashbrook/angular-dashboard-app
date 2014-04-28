@@ -83,7 +83,7 @@ angular.module('app')
           showXAxis: 'true',
           showYAxis: 'true',
           xAxisTickFormat: 'xAxisTickFormat()',
-          forcey: '[0,100]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
         },
         dataModelOptions: {
           params: {
