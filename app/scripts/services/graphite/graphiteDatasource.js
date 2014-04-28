@@ -1,11 +1,7 @@
-define([
-  'kbn',
-],
-function (kbn) {
-  'use strict';
+'use strict';
 
-  var module = angular.module('app.services');
-  // var module = angular.module('kibana.services');
+angular.module('app.service')
+  .factory('GraphiteDatasource', function($, _, dashboard, $q, $http, moment, filterSrv) {
 
     function GraphiteDatasource(datasource) {
       this.type = 'graphite';
@@ -80,7 +76,7 @@ function (kbn) {
         }
 
         //AW TODO
-        date = kbn.parseDate(date);
+        // date = kbn.parseDate(date);
       }
 
       date = moment.utc(date);
@@ -188,4 +184,3 @@ function (kbn) {
 
   });
 
-});

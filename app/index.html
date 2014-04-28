@@ -43,7 +43,7 @@
 
         <!-- build:js scripts/modules.js -->
         <script src="bower_components/jquery/jquery.js"></script>
-        <script src="bower_components/underscore/underscore.js"></script>
+          <script src="bower_components/underscore/underscore.js"></script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
         <script src="bower_components/angular-route/angular-route.js"></script>
@@ -68,7 +68,11 @@
         <script src="scripts/services/datamodel.js"></script>
         <script src="scripts/services/service.js"></script>
         <script src="scripts/services/websocket.js"></script>
-        <script src="scripts/services/graphite.js"></script>
+        <script src="scripts/services/graphite/graphite.js"></script>
+        <script src="scripts/services/graphite/graphiteDatasource.js"></script>
+        <script src="scripts/services/graphite/gfunc.js"></script>
+        <script src="scripts/services/graphite/lexer.js"></script>
+        <script src="scripts/services/graphite/parser.js"></script>
         <script src="scripts/services/gateway.js"></script>
         <script src="scripts/services/widgets.js"></script>
         <script src="scripts/widgets/time/time.js"></script>
@@ -80,6 +84,8 @@
         <script src="scripts/widgets/lineChart/lineChart.js"></script>
         <script src="scripts/widgets/historicalChart/historicalChart.js"></script>
         <script src="scripts/widgets/pieChart/pieChart.js"></script>
+        <script src="scripts/widgets/graphiteEditor/addGraphiteFunc.js"></script>
+        <script src="scripts/widgets/graphiteEditor/graphiteFuncEditor.js"></script>
         <script src="scripts/widgets/rickshawChart/rickshawChart.js"></script>
         <script src="scripts/widgets/json/json.js"></script>
         <script src="scripts/controllers/main.js"></script>
@@ -92,6 +98,7 @@
         <script src="scripts/controllers/topics.js"></script>
         <script src="scripts/controllers/widgetOptions.js"></script>
         <script src="scripts/controllers/graphiteOptions.js"></script>
+        <script src="scripts/controllers/graphiteTarget.js"></script>
         <script src="scripts/vendor/meteor-ddp.js"></script>
         <!-- endbuild -->
 

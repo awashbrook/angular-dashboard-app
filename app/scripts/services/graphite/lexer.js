@@ -1,4 +1,4 @@
-define([], function() {
+define([], function(_) {
   'use strict';
 
   // This is auto generated from the unicode tables.

@@ -4,9 +4,8 @@
 // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
 
 angular.module('app.service')
-  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
-    function GraphiteTimeSeriesDataModel() {
-    }
+  .factory('GraphiteTimeSeriesDataModel', function (_, settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
+    function GraphiteTimeSeriesDataModel() {}
 
     GraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
 

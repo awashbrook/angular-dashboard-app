@@ -1,11 +1,9 @@
-define([],
-function (gfunc, Parser) {
-  'use strict';
+'use strict';
 
   // var module = angular.module('kibana.controllers');
   var module = angular.module('app');
 
-  module.controller('GraphiteTargetCtrl', function($scope, $http, filterSrv) {
+  module.controller('GraphiteTargetCtrl', function($scope, $http, filterSrv, gfunc, Parser) {
 
     $scope.init = function() {
       parseTarget();
@@ -283,5 +281,3 @@ function (gfunc, Parser) {
       }
     };
   });
-
-});

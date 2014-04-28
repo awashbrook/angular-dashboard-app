@@ -1,10 +1,10 @@
-define([], function () {
+
   'use strict';
 
   angular
     .module('app.directives')
     // .module('kibana.directives')
-    .directive('graphiteAddFunc', function($compile) {
+    .directive('graphiteAddFunc', function($, _, $compile, gfunc) {
       var inputTemplate = '<input type="text"'+
                             ' class="grafana-target-segment-input input-medium grafana-target-segment-input"' +
                             ' spellcheck="false" style="display:none"></input>';
@@ -91,4 +91,3 @@ define([], function () {
       };
     });
   }
-});

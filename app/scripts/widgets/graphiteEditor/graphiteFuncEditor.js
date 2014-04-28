@@ -1,10 +1,8 @@
-define([], function () {
-  'use strict';
-
+'use strict';
   angular
     .module('app.directives')
     // .module('kibana.directives')
-    .directive('graphiteFuncEditor', function($compile) {
+    .directive('graphiteFuncEditor', function($, _, $compile) {
 
       var funcSpanTemplate = '<a ng-click="">{{func.def.name}}</a><span>(</span>';
       var paramTemplate = '<input type="text" style="display:none"' +
@@ -234,6 +232,3 @@ define([], function () {
       };
 
     });
-
-
-});
