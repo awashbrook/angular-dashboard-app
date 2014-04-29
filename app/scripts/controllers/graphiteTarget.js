@@ -1,6 +1,5 @@
 'use strict';
 
-  // var module = angular.module('kibana.controllers');
   var module = angular.module('app');
 
   module.controller('GraphiteTargetCtrl', function($scope, $http, filterSrv, gfunc, Parser) {
@@ -156,14 +155,15 @@
             segment.html = segment.val = segment.text;
           });
 
-          _.each(filterSrv.list, function(filter) {
-            segments.unshift({
-              type: 'template',
-              html: '[[' + filter.name + ']]',
-              val: '[[' + filter.name + ']]',
-              expandable: true,
-            });
-          });
+          //AW Doesn't appear to be call when I call Grafana
+          // _.each(filterSrv.list, function(filter) {
+          //   segments.unshift({
+          //     type: 'template',
+          //     html: '[[' + filter.name + ']]',
+          //     val: '[[' + filter.name + ']]',
+          //     expandable: true,
+          //   });
+          // });
 
           segments.unshift({val: '*', html: '<i class="icon-asterisk"></i>', expandable: true });
           $scope.altSegments = segments;

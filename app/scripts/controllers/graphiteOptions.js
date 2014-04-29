@@ -31,6 +31,7 @@ angular.module('app')
       var ds = new GraphiteDatasource(dsConfig);
 
       // do something on scope with target, e.g. [ target ].
+      $scope.targets = [ target ];
     }
 
   });

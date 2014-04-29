@@ -63,7 +63,7 @@ angular.module('app.service')
           format: 'json' // AW
         }})
         .success(function (graphiteData) {
-          console.log('Graphite Responded');
+          // console.log('Graphite Responded');
           // console.log(JSON.stringify(graphiteData));
           
           // Strip out null data points: this is how we did it dashing with Ruby
