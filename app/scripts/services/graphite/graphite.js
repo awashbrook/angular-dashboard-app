@@ -126,7 +126,8 @@ angular.module('app.service')
             // This works really well with NVD3 giving "No Data Available" and leaving old data set up!
             // TODO: Does NOT work with Rickshaw which chokes on empty series today!
           
-          console.log(JSON.stringify(filteredGraphiteData));
+          // console.log(JSON.stringify(filteredGraphiteData));
+          
           // Update new graphite target
           // this.widgetScope.$apply(function() {
             // this.widgetScope.graphite = filteredGraphiteData; // TODO AW NOW Trying to get original callback working

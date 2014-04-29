@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.service')
-  .factory('GraphiteDatasource', function($, _, dashboard, $q, $http, moment, filterSrv) {
+  .factory('GraphiteDatasource', function($, _, $q, $http, moment) {
 
     function GraphiteDatasource(datasource) {
       this.type = 'graphite';
@@ -96,9 +96,10 @@ angular.module('app.service')
         }
       }
 
-      if (dashboard.current.timezone === 'browser') {
-        date = date.local();
-      }
+      //AW Not porting dashboard
+      // if (dashboard.current.timezone === 'browser') {
+      //   date = date.local();
+      // }
 
       //AW Not porting grafana config
       // if (config.timezoneOffset) {
@@ -111,7 +112,8 @@ angular.module('app.service')
     GraphiteDatasource.prototype.metricFindQuery = function(query) {
       var interpolated;
       try {
-        interpolated = filterSrv.applyFilterToTarget(query);
+        // interpolated = filterSrv.applyFilterToTarget(query);
+        interpolated = query; // AW
       }
       catch(err) {
         return $q.reject(err);
@@ -167,7 +169,8 @@ angular.module('app.service')
         if (key === "targets") {
           _.each(value, function (value) {
             if (!value.hide) {
-              var targetValue = filterSrv.applyFilterToTarget(value.target);
+              // var targetValue = filterSrv.applyFilterToTarget(value.target);
+              var targetValue = value.target; // AW
               clean_options.push("target=" + encodeURIComponent(targetValue));
             }
           }, this);
@@ -178,7 +181,6 @@ angular.module('app.service')
       }, this);
       return clean_options;
     };
-
 
     return GraphiteDatasource;
 

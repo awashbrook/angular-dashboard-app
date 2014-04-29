@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('GraphiteOptionsCtrl', function ($scope) {
+  .controller('GraphiteOptionsCtrl', function ($scope, GraphiteDatasource) {
 
     var widget = $scope.widget;
 
@@ -23,5 +23,14 @@ angular.module('app')
       $scope.selecttarget = function (target) {
         $scope.target = target;
       };
+      
+      var target = widget.dataModel.getTarget();
+
+      var dsConfig = {type: "graphite", url: "http://metrics.alpha.eikon-mon.int.thomsonreuters.com", default: true, name: "graphite"};
+            
+      var ds = new GraphiteDatasource(dsConfig);
+
+      // do something on scope with target, e.g. [ target ].
     }
+
   });
