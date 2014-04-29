@@ -1,11 +1,13 @@
 'use strict';
-
-// TODO factor out into “interpreter” service translating between the formats
-// so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
-
+//
+// Real Graphite Data Service
+//
 angular.module('app.service')
-  .factory('GraphiteTimeSeriesDataModel', function (_, settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
+  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
     function GraphiteTimeSeriesDataModel() {}
+
+    // TODO factor out into “interpreter” service translating between the formats
+    // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
 
     GraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
 
@@ -18,7 +20,7 @@ angular.module('app.service')
       // Ref parent framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html', // from parent dashbaord framewor
+        templateUrl: 'template/widget-template.html', // from parent dashbaord framework  
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
@@ -169,7 +171,9 @@ angular.module('app.service')
     
     return GraphiteTimeSeriesDataModel;
   })
-  // Canned Graphite Data
+  //
+  // Canned Graphite Data Service
+  //
   .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function SampleGraphiteTimeSeriesDataModel() {}
     
@@ -186,10 +190,8 @@ angular.module('app.service')
       // }.bind(this);
       
       var i = 0;
-      
       // Main function to call graphite and update $scope.graphite in data model 
-      this.callGraphite = function () {
-        
+      this.callGraphite = function () {        
         console.log(JSON.stringify(graphiteSampleData));
         this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
         i++;
@@ -218,7 +220,9 @@ angular.module('app.service')
     };
     return SampleGraphiteTimeSeriesDataModel;
   })
+  //
   // Helper function to convert graphite series to NVD3
+  //
   .factory('Graphite2NVD3', function () {
     function Graphite2NVD3() {}
 
@@ -255,7 +259,7 @@ angular.module('app.service')
               key: result.target
             };
         });
-        console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
+        // console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
         // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
       }
       return nvd3Series;

@@ -1,7 +1,5 @@
 'use strict';
-  angular
-    .module('app.directives')
-    // .module('kibana.directives')
+  angular.module('ui.dashboard.widgets')
     .directive('graphiteFuncEditor', function($, _, $compile) {
 
       var funcSpanTemplate = '<a ng-click="">{{func.def.name}}</a><span>(</span>';

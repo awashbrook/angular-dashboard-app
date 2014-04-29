@@ -1,5 +1,6 @@
-define([], function (Lexer) {
-  'use strict';
+'use strict';
+angular.module('app.service')
+  .service('Parser', function(Lexer) {
 
   function Parser(expression) {
     this.expression = expression;

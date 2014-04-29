@@ -1,5 +1,6 @@
-define([], function (_) {
-  'use strict';
+'use strict';
+angular.module('app.service')
+  .service('gfunc', function(_) {
 
   var index = [];
   var categories = {

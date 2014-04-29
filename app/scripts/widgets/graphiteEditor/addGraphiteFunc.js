@@ -1,9 +1,6 @@
-
-  'use strict';
-
+'use strict';
   angular
-    .module('app.directives')
-    // .module('kibana.directives')
+    .module('ui.dashboard.widgets')
     .directive('graphiteAddFunc', function($, _, $compile, gfunc) {
       var inputTemplate = '<input type="text"'+
                             ' class="grafana-target-segment-input input-medium grafana-target-segment-input"' +

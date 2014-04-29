@@ -1,5 +1,6 @@
-define([], function(_) {
-  'use strict';
+'use strict';
+angular.module('app.service')
+  .service('Lexer', function(_) {
 
   // This is auto generated from the unicode tables.
   // The tables are at:
