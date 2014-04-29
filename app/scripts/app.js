@@ -14,6 +14,7 @@ angular.module('app', [
     'ui.dashboard.widgets'
   ])
   .constant('settings', window.settings)
+  .constant('_', window._)
   .config(function ($routeProvider, webSocketProvider, settings) {
     if (settings) {
       webSocketProvider.setWebSocketURL(settings.webSocketURL);
