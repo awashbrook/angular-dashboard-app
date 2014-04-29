@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel) {
+  .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
         name: 'wt-time',
@@ -108,6 +108,22 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: SampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          // data: 'stackedAreaChartData',
+          height: '400',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'nvd3GraphiteMulti',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
         attrs: {
           // data: 'stackedAreaChartData',
           height: '400',

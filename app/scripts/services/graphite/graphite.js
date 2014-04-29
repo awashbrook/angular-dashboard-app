@@ -3,7 +3,7 @@
 // Real Graphite Data Service
 //
 angular.module('app.service')
-  .factory('GraphiteTimeSeriesDataModel', function (settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
+  .factory('GraphiteTimeSeriesDataModel', function (_, settings, WidgetDataModel, Graphite2NVD3, $http, $interval) {
     function GraphiteTimeSeriesDataModel() {}
 
     // TODO factor out into “interpreter” service translating between the formats
@@ -172,7 +172,7 @@ angular.module('app.service')
     return GraphiteTimeSeriesDataModel;
   })
   //
-  // Canned Graphite Data Service
+  // Canned Graphite Data Source - Rotating Sample Data with illusion of real time updates
   //
   .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function SampleGraphiteTimeSeriesDataModel() {}
@@ -182,17 +182,10 @@ angular.module('app.service')
     SampleGraphiteTimeSeriesDataModel.prototype.init = function () {
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
-      // Main function to call graphite and update $scope.graphite in data model 
-      // this.callGraphite = function () {
-      //   console.log('Propagating Graphite Series');
-      //   console.log(JSON.stringify(graphiteSampleData));
-      //   this.widgetScope.graphite = graphiteSampleData;
-      // }.bind(this);
-      
       var i = 0;
       // Main function to call graphite and update $scope.graphite in data model 
       this.callGraphite = function () {        
-        console.log(JSON.stringify(graphiteSampleData));
+        // console.log(JSON.stringify(graphiteSampleData));
         this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
         i++;
       }.bind(this);
@@ -202,15 +195,9 @@ angular.module('app.service')
       // Enable poll for pseudo-real-time graphite updates 
       this.intervalPromise = $interval(this.callGraphite, 5 * 1000);
       
-      // $scope.$watch('target', function (newTarget) {
       this.widgetScope.$watch('graphite', function(graphite) {
-        console.log(graphite);        
-/*
-        TODO factor out into “interpreter” service translating between the formats
-        so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
-*/        
-        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));
-        
+        // console.log(graphite);                
+        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));        
       }.bind(this));
     };
   
@@ -221,9 +208,34 @@ angular.module('app.service')
     return SampleGraphiteTimeSeriesDataModel;
   })
   //
-  // Helper function to convert graphite series to NVD3
+  // Canned Graphite Data Source - Multi Series
   //
-  .factory('Graphite2NVD3', function () {
+  .factory('MultiSampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
+    function MultiSampleGraphiteTimeSeriesDataModel() {}
+    
+    MultiSampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
+
+    MultiSampleGraphiteTimeSeriesDataModel.prototype.init = function () {
+      WidgetDataModel.prototype.init.call(this); // super is a no-op today!
+  
+      this.widgetScope.graphite = graphiteSampleData;
+      
+      this.widgetScope.$watch('graphite', function(graphite) {
+        // console.log(graphite);                
+        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));        
+      }.bind(this));
+    };    
+
+    MultiSampleGraphiteTimeSeriesDataModel.prototype.destroy = function () {
+      WidgetDataModel.prototype.destroy.call(this);
+      $interval.cancel(this.intervalPromise);
+    };
+    return MultiSampleGraphiteTimeSeriesDataModel;
+  })
+  //
+  // Helper service to convert graphite series to NVD3
+  //
+  .service('Graphite2NVD3', function () {
     function Graphite2NVD3() {}
 
     // console.log(graphite);
@@ -297,7 +309,7 @@ angular.module('app.service')
   //   i += 1;
   // 
   // end
-//   .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData) {
+//   .service('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData) {
 //     function SampleGraphiteTimeSeriesDataModel() {}
 //     
 //     SampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
