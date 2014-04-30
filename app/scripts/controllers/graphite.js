@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel, RandomTopNDataModel) {
+  .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       // {
       //   name: 'nvd3-stacked-area-chart',
@@ -74,16 +74,64 @@ angular.module('app')
       //   }
       // },
       {
+        name: 'nvRealDataAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '300',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target:'stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage'
+          }
+        },
+        style: {
+          width: '300px'
+        }
+      },
+      {
+        name: 'nvRandomWalkAlpha',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '300',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            target:'randomWalk(%27random%20walk2%27)',
+            interval: 60
+          }
+        },
+        style: {
+          width: '300px'
+        }
+      },
+      {
         name: 'nvRealDataBeta',
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
         attrs: {
-          height: '350',
+          height: '300',
           showXAxis: 'true',
           showYAxis: 'true',
           xAxisTickFormat: 'xAxisTickFormat()',
-          forcey: '[0,100]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
         },
         dataModelOptions: {
           params: {
@@ -94,7 +142,7 @@ angular.module('app')
           }
         },
         style: {
-          width: '400px'
+          width: '300px'
         }
       },
       {
@@ -103,7 +151,7 @@ angular.module('app')
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
         attrs: {
-          height: '400',
+          height: '300',
           showXAxis: 'true',
           showYAxis: 'true',
           xAxisTickFormat: 'xAxisTickFormat()'
@@ -118,9 +166,9 @@ angular.module('app')
           }
         },
         style: {
-          width: '400px'
+          width: '300px'
         }
-      },
+      }
       // {
       //   name: 'RandomWalkBeta',
       //   directive: 'rickshaw',
@@ -157,14 +205,6 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      {
-        name: 'wt-top-n',
-        dataAttrName: 'data',
-        dataModelType: RandomTopNDataModel,
-        style: {
-          width: '30%'
-        }
-      }
     ];
 
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
