@@ -90,7 +90,7 @@ angular.module('app')
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-6h',
             until: 'now',
-            target: ['stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage']
+            target: ['stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage','stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs02.os.cpu.usage']
           }
         },
         style: {
@@ -113,7 +113,7 @@ angular.module('app')
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-1h',
             until: 'now',
-            // target:'randomWalk(%27random%20walk2%27)',
+            // target:'randomWalk("random walk 2")',
             interval: 60
           }
         },

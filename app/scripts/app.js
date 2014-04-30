@@ -16,7 +16,7 @@ angular.module('app', [
   .constant('settings', window.settings)
   .constant('$', window.$)
   .constant('_', window._)
-  .constant('moment', window.moment)
+    .constant('moment', window.moment )
   .config(function ($routeProvider, webSocketProvider, settings) {
     if (settings) {
       webSocketProvider.setWebSocketURL(settings.webSocketURL);

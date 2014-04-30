@@ -32,48 +32,8 @@ angular.module('app.service')
         controller: 'WidgetDialogCtrl'
       };      
       
-      // Accessors used here and in graphite target editor 
-      
-      GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
-        if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
-        
-          this.dataModelOptions.params.target = newTarget;
-
-          // Log after updates 
-          console.log(this.dataModelOptions.params);
-          console.log(this);
-        
-          this.callGraphite();
-        }
-      };//.bind(this);
-      
-      GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
-        // var oldTarget = widget.dataModelOptions.params.target;
-        return this.dataModelOptions.params.target;
-      };///.bind(this);
-      
-      // Do stuff with data model parameters
-      
-      var params = this.dataModelOptions ? this.dataModelOptions.params : {};
-    
-      //AW TODO do I really like this: Rafe does!
-      
-      // Default Random walk if no target provided
-      // params.target || (params.target = 
-      this.getTarget() || this.setTarget(
-        [
-        'randomWalk(%27random%20walk1%27)',
-        'randomWalk(%27random%20walk2%27)',
-        'randomWalk(%27random%20walk3%27)'
-        ]
-      );
-
-      // Default polling interval is 30 seconds
-      // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
-      // https://github.com/angular/angular.js/blob/ffe5115355baa6ee2136b6fb5e4828e4e2fa58f8/src/ng/interval.js#L133
-      var interval = params.interval || (interval = 30);
-      
       // Main function to call graphite and update $scope.graphite in data model 
+      
       this.callGraphite = function () {
         
         var params = this.dataModelOptions.params;
@@ -123,7 +83,7 @@ angular.module('app.service')
           var filteredGraphiteData = _.map(graphiteData, function(stats) {
             return {
               target: stats.target,
-              datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
+                datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
             };
           });
 
@@ -160,10 +120,52 @@ angular.module('app.service')
           
         }.bind(this))
         .error(function (data, status) {
-            console.error('AW TODO better handling:' + data);
+            console.error('Graphite Rejected' + data);
         });
        
       }.bind(this);
+      
+      // Accessors used here and in graphite target editor 
+      
+      GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
+        if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
+        
+          this.dataModelOptions.params.target = newTarget;
+
+          // Log after updates 
+          console.log(this.dataModelOptions.params);
+          console.log(this);
+        
+          this.callGraphite();
+        }
+      };//.bind(this);
+      
+      GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
+        // var oldTarget = widget.dataModelOptions.params.target;
+        return this.dataModelOptions.params.target;
+      };///.bind(this);
+      
+      // Do stuff with data model parameters
+      
+      var params = this.dataModelOptions ? this.dataModelOptions.params : {};
+    
+      //AW TODO do I really like this: Rafe does!
+      
+      // Default Random walk if no target provided
+      // params.target || (params.target = 
+      this.getTarget() || this.setTarget(
+        [
+        // 'randomWalk(%27random%20walk2%27)',
+        'randomWalk("random walk 1")',
+        'randomWalk("random walk 2")',
+        'randomWalk("random walk 3")',
+        ]
+      );
+
+      // Default polling interval is 30 seconds
+      // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
+      // https://github.com/angular/angular.js/blob/ffe5115355baa6ee2136b6fb5e4828e4e2fa58f8/src/ng/interval.js#L133
+      var interval = params.interval || (interval = 30);
       
       this.callGraphite();
       
