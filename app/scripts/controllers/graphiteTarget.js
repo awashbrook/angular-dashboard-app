@@ -1,8 +1,7 @@
 'use strict';
 
-  var module = angular.module('app');
-
-  module.controller('GraphiteTargetCtrl', function($scope, $http, gfunc, Parser) {
+angular.module('app')
+  .controller('GraphiteTargetCtrl', function($scope, $http, gfunc, Parser) {
 
     $scope.init = function() {
       parseTarget();
@@ -17,7 +16,7 @@
 
       delete $scope.parserError;
 
-      var parser = new Parser($scope.target.target);
+      var parser = new Parser($scope.target);
       var astNode = parser.getAst();
       if (astNode === null) {
         checkOtherSegments(0);
@@ -264,9 +263,8 @@
       $scope.panel.targets.push(clone);
     };
 
-  });
-
-  module.directive('focusMe', function($timeout, $parse) {
+  })
+  .directive('focusMe', function($timeout, $parse) {
     return {
       //scope: true,   // optionally create a child scope
       link: function(scope, element, attrs) {

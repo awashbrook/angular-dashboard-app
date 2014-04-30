@@ -147,8 +147,7 @@ angular.module('app.service')
       // Accessors used by graphite options dialog
       
       GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
-        // if (newTarget && (newTarget !== this.dataModelOptions.params.target )) {
-        if (newTarget) {
+        if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
         
           this.dataModelOptions.params.target = newTarget;
 

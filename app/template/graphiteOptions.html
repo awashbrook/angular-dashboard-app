@@ -3,8 +3,8 @@
       <label for="metricName" class="col-sm-2 control-label">Metric Name</label>
       <div class="col-sm-10">
         <ul>
-          <li ng-repeat="aTarget in target">
-            <input type="text" class="form-control" name="metricName" ng-model="aTarget" placeholder="{{aTarget}}" >
+          <li ng-repeat="target in targets">
+            <input type="text" class="form-control" name="metricName" ng-model="target">
           </li>
         </ul>
       </div>
