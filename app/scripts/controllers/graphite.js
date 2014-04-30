@@ -1,22 +1,9 @@
 'use strict';
 
 angular.module('app')
-  .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel, RandomTopNDataModel) {
+  .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
-      // {
-      //   name: 'nvd3-stacked-area-chart',
-      //   attrs: {
-      //     data: 'stackedAreaChartData',
-      //     height: '400',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()'
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // },
-      
+    
       //AW This is how Rickshaw graphite widget was invoked in previous project
       //                 <graphite url="http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/"
       //                 annotations="[]"
@@ -74,7 +61,79 @@ angular.module('app')
       //   }
       // },
       {
-        name: 'nvRealDataBeta',
+        name: 'nvSingleTargetAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },     
+      {
+        name: 'nvSingleTargetBeta',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
+        name: 'nvTwoTargetsAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage','stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
+        name: 'nvTwoTargetsBeta',
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
@@ -98,12 +157,36 @@ angular.module('app')
         }
       },
       {
+        name: 'nvRandomWalkAlpha',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            // target:'randomWalk("random walk 2")', // No target: default random walk is three
+            interval: 10
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
         name: 'nvRandomWalkBeta',
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
         attrs: {
-          height: '400',
+          height: '350',
           showXAxis: 'true',
           showYAxis: 'true',
           xAxisTickFormat: 'xAxisTickFormat()'
@@ -113,8 +196,8 @@ angular.module('app')
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-1h',
             until: 'now',
-            // target:'randomWalk("random walk 2")',
-            interval: 60
+            // target:'randomWalk("random walk 2")', // No target: default random walk is three
+            interval: 10
           }
         },
         style: {
@@ -158,13 +241,6 @@ angular.module('app')
       //   }
       // },
       // {
-  //       name: 'wt-top-n',
-  //       dataAttrName: 'data',
-  //       dataModelType: RandomTopNDataModel,
-  //       style: {
-  //         width: '30%'
-  //       }
-  //     }
     ];
 
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
