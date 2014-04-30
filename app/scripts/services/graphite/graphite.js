@@ -36,7 +36,8 @@ angular.module('app.service')
       
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
     
-      //AW TODO do I really like this :)
+      //AW TODO do I really like this: Rafe does!
+      
       // Default Random walk if no target provided
       params.target || (params.target = [
         'randomWalk(%27random%20walk1%27)',
@@ -146,7 +147,8 @@ angular.module('app.service')
       // Accessors used by graphite options dialog
       
       GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
-        if (newTarget && (newTarget !== this.dataModelOptions.params.target )) {
+        // if (newTarget && (newTarget !== this.dataModelOptions.params.target )) {
+        if (newTarget) {
         
           this.dataModelOptions.params.target = newTarget;
 

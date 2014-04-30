@@ -113,7 +113,7 @@ angular.module('app')
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-1h',
             until: 'now',
-            target:'randomWalk(%27random%20walk2%27)',
+            // target:'randomWalk(%27random%20walk2%27)',
             interval: 60
           }
         },

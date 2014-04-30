@@ -2,7 +2,7 @@
 
   var module = angular.module('app');
 
-  module.controller('GraphiteTargetCtrl', function($scope, $http, filterSrv, gfunc, Parser) {
+  module.controller('GraphiteTargetCtrl', function($scope, $http, gfunc, Parser) {
 
     $scope.init = function() {
       parseTarget();
