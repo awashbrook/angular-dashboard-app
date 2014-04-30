@@ -30,7 +30,27 @@ angular.module('app.service')
           }
         },
         controller: 'WidgetDialogCtrl'
-      };
+      };      
+      
+      // Accessors used here and in graphite target editor 
+      
+      GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
+        if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
+        
+          this.dataModelOptions.params.target = newTarget;
+
+          // Log after updates 
+          console.log(this.dataModelOptions.params);
+          console.log(this);
+        
+          this.callGraphite();
+        }
+      };//.bind(this);
+      
+      GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
+        // var oldTarget = widget.dataModelOptions.params.target;
+        return this.dataModelOptions.params.target;
+      };///.bind(this);
       
       // Do stuff with data model parameters
       
@@ -39,11 +59,14 @@ angular.module('app.service')
       //AW TODO do I really like this: Rafe does!
       
       // Default Random walk if no target provided
-      params.target || (params.target = [
+      // params.target || (params.target = 
+      this.getTarget() || this.setTarget(
+        [
         'randomWalk(%27random%20walk1%27)',
         'randomWalk(%27random%20walk2%27)',
         'randomWalk(%27random%20walk3%27)'
-      ]);
+        ]
+      );
 
       // Default polling interval is 30 seconds
       // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
@@ -143,26 +166,6 @@ angular.module('app.service')
       }.bind(this);
       
       this.callGraphite();
-      
-      // Accessors used by graphite options dialog
-      
-      GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
-        if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
-        
-          this.dataModelOptions.params.target = newTarget;
-
-          // Log after updates 
-          console.log(this.dataModelOptions.params);
-          console.log(this);
-        
-          this.callGraphite();
-        }
-      };//.bind(this);
-      
-      GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
-        // var oldTarget = widget.dataModelOptions.params.target;
-        return this.dataModelOptions.params.target;
-      };///.bind(this);
       
     };
 

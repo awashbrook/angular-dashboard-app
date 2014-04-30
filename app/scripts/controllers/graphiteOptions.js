@@ -3,10 +3,10 @@
 angular.module('app')
   .controller('GraphiteOptionsCtrl', function ($scope, GraphiteDatasource) {
 
-    var dsConfig = {type: "graphite", url: "http://metrics.alpha.eikon-mon.int.thomsonreuters.com", default: true, name: "graphite"};
-          
-    var dsConfig = new GraphiteDatasource(dsConfig);
-    
+    // Graphite Editor Integration
+    // var dsConfig = {type: "graphite", url: "http://metrics.alpha.eikon-mon.int.thomsonreuters.com", default: true, name: "graphite"};
+    //       
+    // var dsConfig = new GraphiteDatasource(dsConfig);    
     //
     var widget = $scope.widget;
 

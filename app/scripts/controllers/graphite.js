@@ -120,7 +120,7 @@ angular.module('app')
         style: {
           width: '400px'
         }
-      },
+      }
       // {
       //   name: 'RandomWalkBeta',
       //   directive: 'rickshaw',
@@ -157,14 +157,14 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      {
-        name: 'wt-top-n',
-        dataAttrName: 'data',
-        dataModelType: RandomTopNDataModel,
-        style: {
-          width: '30%'
-        }
-      }
+      // {
+  //       name: 'wt-top-n',
+  //       dataAttrName: 'data',
+  //       dataModelType: RandomTopNDataModel,
+  //       style: {
+  //         width: '30%'
+  //       }
+  //     }
     ];
 
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
