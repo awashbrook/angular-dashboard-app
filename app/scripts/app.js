@@ -56,6 +56,10 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'GraphiteCtrl'
       })
+      .when('/auto', {
+        templateUrl: 'views/main.html',
+        controller: 'AutoCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
