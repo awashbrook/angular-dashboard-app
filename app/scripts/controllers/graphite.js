@@ -186,10 +186,14 @@ angular.module('app')
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
         attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()'
+          height: 350,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          tooltips: true,
+          tooltipcontent: "toolTipContentFunction()",
+          id: 'nvRandomWalkBeta'
         },
         dataModelOptions: {
           params: {
@@ -265,6 +269,14 @@ angular.module('app')
     $scope.xAxisTickFormat = function () {
       return function (d) {
         return d3.time.format('%x')(new Date(d));
+      };
+    };
+
+    $scope.toolTipContentFunction = function() {
+      return function(key, x, y, e, graph) {
+      return  'Super New Tooltip' +
+        '<h1>' + key + '</h1>' +
+        '<p>' +  y + ' at ' + x + '</p>';
       };
     };
 
