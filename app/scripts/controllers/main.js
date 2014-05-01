@@ -110,9 +110,9 @@ angular.module('app')
         dataModelType: SampleGraphiteTimeSeriesDataModel,
         attrs: {
           // data: 'stackedAreaChartData',
-          height: '400',
-          showXAxis: 'true',
-          showYAxis: 'true',
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
           xAxisTickFormat: 'xAxisTickFormat()'
         },
         style: {
@@ -125,11 +125,16 @@ angular.module('app')
         dataAttrName: 'data',
         dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
         attrs: {
-          // data: 'stackedAreaChartData',
-          height: '400',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()'
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          color: "colorFunction()",
+//          isArea="true"        
+//          tooltipcontent: "toolTipContentFunction()",
+          id: 'nvd3GraphiteMulti'
         },
         style: {
           width: '50%'
@@ -167,6 +172,22 @@ angular.module('app')
     $scope.xAxisTickFormat = function () {
       return function (d) {
         return d3.time.format('%x')(new Date(d));
+      };
+    };
+
+    var colorArray = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
+    $scope.colorFunction = function(){
+        return function(d, i){
+            return colorArray[i];
+        };
+    };
+   
+    // Not used 
+    $scope.toolTipContentFunction = function() {
+      return function(key, x, y, e, graph) {
+      return  'Super New Tooltip' +
+        '<b>' + key + '<b>' +
+        '<p>' +  y + ' at ' + x + '</p>';
       };
     };
 
