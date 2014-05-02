@@ -178,18 +178,26 @@ angular.module('app')
     };
     
     // D3.color() schemes nvd3/test/stackedAreaChartTest.html
-    var d3scheme = d3.scale.category20();
+    // var d3scheme = d3.scale.category10(); // Primary Colors
+    // var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
+    // var d3scheme = d3.scale.category20b(); // Subtle shades of purple
+    var d3scheme = d3.scale.category20c(); // Subtle shades of blue
     var keyColor = function(d, i) {
       return d3scheme(d.key);
     };    
     // From angularjs-nvd3-directives/examples/cumulativeLineChart.html
-    var indexedColors = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
+    // var indexedColors = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
+    // From dashing preferred rickshaw chart
+    // var indexedColors = [rgba(96,170,255,0.8),rgba(96,170,255,0.6),rgba(96,170,255,0.4),rgba(96,170,255,0.2)];
+    // var indexedColors = ["rgba(96,170,255,0.8)", "rgba(96,170,255,0.6)", "rgba(96,170,255,0.4)", "rgba(96,170,255,0.2)"];
+    var indexedColors = ["rgb(255, 102, 0)","rgb(169, 0, 91)","rgb(96,170,255)","rgb(192,132,255)"]; // Andy Solid Individual Colors
+    
     var indexColor = function(d, i) {
         return indexedColors[i];
     };
     // Switch color scheme here
     $scope.colorFunction = function() { 
-      return keyColor;
+      return indexColor;
     };
       
       
