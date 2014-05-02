@@ -4,6 +4,44 @@ angular.module('app')
   .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
+        name: 'nvd3Graphite',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: SampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          // data: 'stackedAreaChartData',
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'nvd3GraphiteMulti',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          color: "colorFunction()",
+//          isArea="true"        
+//          tooltipcontent: "toolTipContentFunction()",
+          id: 'nvd3GraphiteMulti'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
         name: 'wt-time',
         style: {
           width: '33%'
@@ -93,7 +131,7 @@ angular.module('app')
         attrs: {
           data: 'pieChartData'
         }
-      },
+      }
       // {
       //   name: 'rickshawGraphite',
       //   directive: 'rickshaw',
@@ -103,43 +141,7 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      {
-        name: 'nvd3Graphite',
-        directive: 'nvd3-stacked-area-chart',
-        dataAttrName: 'data',
-        dataModelType: SampleGraphiteTimeSeriesDataModel,
-        attrs: {
-          // data: 'stackedAreaChartData',
-          height: 400,
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()'
-        },
-        style: {
-          width: '50%'
-        }
-      },
-      {
-        name: 'nvd3GraphiteMulti',
-        directive: 'nvd3-stacked-area-chart',
-        dataAttrName: 'data',
-        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
-        attrs: {
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()',
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          color: "colorFunction()",
-//          isArea="true"        
-//          tooltipcontent: "toolTipContentFunction()",
-          id: 'nvd3GraphiteMulti'
-        },
-        style: {
-          width: '50%'
-        }
-      }
+
     ];
 
 
@@ -174,22 +176,38 @@ angular.module('app')
         return d3.time.format('%x')(new Date(d));
       };
     };
-
-    var colorArray = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
-    $scope.colorFunction = function(){
-        return function(d, i){
-            return colorArray[i];
-        };
+    
+    // D3.color() schemes nvd3/test/stackedAreaChartTest.html
+    var d3scheme = d3.scale.category20();
+    var keyColor = function(d, i) {
+      return d3scheme(d.key);
+    };    
+    // From angularjs-nvd3-directives/examples/cumulativeLineChart.html
+    var indexedColors = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
+    var indexColor = function(d, i) {
+        return indexedColors[i];
     };
+    // Switch color scheme here
+    $scope.colorFunction = function() { 
+      return keyColor;
+    };
+      
+      
+    // $scope.$on('tooltipShow.directive', function(event){
+    //     console.log('scope.tooltipShow', event);
+    // });
+    // 
+    // $scope.$on('tooltipHide.directive', function(event){
+    //     console.log('scope.tooltipHide', event);
    
-    // Not used 
-    $scope.toolTipContentFunction = function() {
-      return function(key, x, y, e, graph) {
-      return  'Super New Tooltip' +
-        '<b>' + key + '<b>' +
-        '<p>' +  y + ' at ' + x + '</p>';
-      };
-    };
+    // Not used with useInteractiveGuideline
+    // $scope.toolTipContentFunction = function() {
+    //   return function(key, x, y, e, graph) {
+    //   return  'Super New Tooltip' +
+    //     '<b>' + key + '<b>' +
+    //     '<p>' +  y + ' at ' + x + '</p>';
+    //   };
+    // };
 
     // pie chart
     $scope.pieChartData = pieChartSampleData;
