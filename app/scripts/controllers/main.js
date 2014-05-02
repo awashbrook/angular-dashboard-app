@@ -4,23 +4,29 @@ angular.module('app')
   .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
-        name: 'nvd3Graphite',
-        directive: 'nvd3-stacked-area-chart',
+        name: 'nvGraphiteMulti',
+        directive: 'nvd3-line-chart',
         dataAttrName: 'data',
-        dataModelType: SampleGraphiteTimeSeriesDataModel,
+        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
         attrs: {
-          // data: 'stackedAreaChartData',
           height: 400,
           showXAxis: true,
           showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()'
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          color: "colorFunction()",
+          stroke: "none",        
+          isArea: "true",        
+          id: 'nvGraphiteMulti'
         },
         style: {
           width: '50%'
         }
-      },
+      }, 
       {
-        name: 'nvd3GraphiteMulti',
+        name: 'nvGraphiteMultiStacked',
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
@@ -33,9 +39,24 @@ angular.module('app')
           useInteractiveGuideline: true,
           tooltips: true,
           color: "colorFunction()",
-//          isArea="true"        
 //          tooltipcontent: "toolTipContentFunction()",
-          id: 'nvd3GraphiteMulti'
+          id: 'nvGraphiteMultiStacked'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'nvd3Graphite',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: SampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          // data: 'stackedAreaChartData',
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()'
         },
         style: {
           width: '50%'
@@ -197,7 +218,7 @@ angular.module('app')
     };
     // Switch color scheme here
     $scope.colorFunction = function() { 
-      return indexColor;
+      return keyColor;
     };
       
       
