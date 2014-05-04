@@ -4,6 +4,65 @@ angular.module('app')
   .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
+        name: 'nvGraphiteMulti',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          color: "colorFunction()",
+          stroke: "none",        
+          isArea: "true",        
+          id: 'nvGraphiteMulti'
+        },
+        style: {
+          width: '50%'
+        }
+      }, 
+      {
+        name: 'nvGraphiteMultiStacked',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          color: "colorFunction()",
+//          tooltipcontent: "toolTipContentFunction()",
+          id: 'nvGraphiteMultiStacked'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'nvd3Graphite',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: SampleGraphiteTimeSeriesDataModel,
+        attrs: {
+          // data: 'stackedAreaChartData',
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()'
+        },
+        style: {
+          width: '50%'
+        }
+      },
+      {
         name: 'wt-time',
         style: {
           width: '33%'
@@ -93,7 +152,7 @@ angular.module('app')
         attrs: {
           data: 'pieChartData'
         }
-      },
+      }
       // {
       //   name: 'rickshawGraphite',
       //   directive: 'rickshaw',
@@ -103,43 +162,7 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-      {
-        name: 'nvd3Graphite',
-        directive: 'nvd3-stacked-area-chart',
-        dataAttrName: 'data',
-        dataModelType: SampleGraphiteTimeSeriesDataModel,
-        attrs: {
-          // data: 'stackedAreaChartData',
-          height: 400,
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()'
-        },
-        style: {
-          width: '50%'
-        }
-      },
-      {
-        name: 'nvd3GraphiteMulti',
-        directive: 'nvd3-stacked-area-chart',
-        dataAttrName: 'data',
-        dataModelType: MultiSampleGraphiteTimeSeriesDataModel,
-        attrs: {
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()',
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          color: "colorFunction()",
-//          isArea="true"        
-//          tooltipcontent: "toolTipContentFunction()",
-          id: 'nvd3GraphiteMulti'
-        },
-        style: {
-          width: '50%'
-        }
-      }
+
     ];
 
 
@@ -174,22 +197,46 @@ angular.module('app')
         return d3.time.format('%x')(new Date(d));
       };
     };
-
-    var colorArray = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
-    $scope.colorFunction = function(){
-        return function(d, i){
-            return colorArray[i];
-        };
+    
+    // D3.color() schemes nvd3/test/stackedAreaChartTest.html
+    // var d3scheme = d3.scale.category10(); // Primary Colors
+    // var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
+    // var d3scheme = d3.scale.category20b(); // Subtle shades of purple
+    var d3scheme = d3.scale.category20c(); // Subtle shades of blue
+    var keyColor = function(d, i) {
+      return d3scheme(d.key);
+    };    
+    // From angularjs-nvd3-directives/examples/cumulativeLineChart.html
+    // var indexedColors = ['#ffa500', '#c80032', '#0000ff', '#6464ff'];
+    // From dashing preferred rickshaw chart
+    // var indexedColors = [rgba(96,170,255,0.8),rgba(96,170,255,0.6),rgba(96,170,255,0.4),rgba(96,170,255,0.2)];
+    // var indexedColors = ["rgba(96,170,255,0.8)", "rgba(96,170,255,0.6)", "rgba(96,170,255,0.4)", "rgba(96,170,255,0.2)"];
+    var indexedColors = ["rgb(255, 102, 0)","rgb(169, 0, 91)","rgb(96,170,255)","rgb(192,132,255)"]; // Andy Solid Individual Colors
+    
+    var indexColor = function(d, i) {
+        return indexedColors[i];
     };
+    // Switch color scheme here
+    $scope.colorFunction = function() { 
+      return keyColor;
+    };
+      
+      
+    // $scope.$on('tooltipShow.directive', function(event){
+    //     console.log('scope.tooltipShow', event);
+    // });
+    // 
+    // $scope.$on('tooltipHide.directive', function(event){
+    //     console.log('scope.tooltipHide', event);
    
-    // Not used 
-    $scope.toolTipContentFunction = function() {
-      return function(key, x, y, e, graph) {
-      return  'Super New Tooltip' +
-        '<b>' + key + '<b>' +
-        '<p>' +  y + ' at ' + x + '</p>';
-      };
-    };
+    // Not used with useInteractiveGuideline
+    // $scope.toolTipContentFunction = function() {
+    //   return function(key, x, y, e, graph) {
+    //   return  'Super New Tooltip' +
+    //     '<b>' + key + '<b>' +
+    //     '<p>' +  y + ' at ' + x + '</p>';
+    //   };
+    // };
 
     // pie chart
     $scope.pieChartData = pieChartSampleData;
