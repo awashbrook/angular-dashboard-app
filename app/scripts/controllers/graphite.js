@@ -91,6 +91,36 @@ angular.module('app')
         }
       },     
       {
+        name: 'nvTwoTargetsAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage','stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
         name: 'nvSingleTargetBeta',
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
@@ -147,31 +177,7 @@ angular.module('app')
           }
         },
         style: {
-          width: '400px'
-        }
-      },
-      {
-        name: 'nvTwoTargetsAlpha',
-        directive: 'nvd3-line-chart',
-        dataAttrName: 'data',
-        dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
-        },
-        dataModelOptions: {
-          params: {
-            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-            from:'-6h',
-            until: 'now',
-            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage','stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage']
-          }
-        },
-        style: {
-          width: '400px'
+          width: '800px'
         }
       },
       {
@@ -184,7 +190,13 @@ angular.module('app')
           showXAxis: 'true',
           showYAxis: 'true',
           xAxisTickFormat: 'xAxisTickFormat()',
-          forcey: '[0,10]' //AW Would like to be able to set arbitrary directive attributes from option editor          
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
         },
         dataModelOptions: {
           params: {
@@ -197,7 +209,7 @@ angular.module('app')
         style: {
           width: '400px'
         }
-      },
+      }
       // {
       //   name: 'nvRandomWalkAlpha',
       //   directive: 'nvd3-stacked-area-chart',
