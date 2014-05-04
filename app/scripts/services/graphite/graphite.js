@@ -83,7 +83,7 @@ angular.module('app.service')
           var filteredGraphiteData = _.map(graphiteData, function(stats) {
             return {
               target: stats.target,
-                datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
+              datapoints: _.filter(stats.datapoints, function(tuple) { return tuple[0] != null; } )
             };
           });
 
@@ -97,25 +97,37 @@ angular.module('app.service')
             }
           }
           if (emptySeries === filteredGraphiteData.length) {
-            //AW This is not the right behaviour if a new non-existant target has been given
-            // TODO Will leave old data on the graph if we suppress
-            // console.warn('ALL SERIES from Graphite were empty, skipping model updates!');
             console.warn('Graphite responded with NO DATA, invalid targets may have been specified: ' + this.getTarget() );
           }  else {
             // If Data received, then poll for updates...enable pseudo-real-time graphite updates 
-            this.intervalPromise = $interval(this.callGraphite, interval * 1000);
+
+            // TODO Suppress below until we need to tear down the poll when $destroy called
+            // this.intervalPromise = $interval(this.callGraphite, interval * 1000);
+            
           }
           
           // Empty updates should still propagate to graph and clear of give "No Data Available"
-            // This works really well with NVD3 giving "No Data Available" and leaving old data set up!
-            // TODO: Does NOT work with Rickshaw which chokes on empty series today!
+          // This works really well with NVD3 giving "No Data Available" and leaving old data set up!
+          // TODO: Does NOT work with Rickshaw which chokes on empty series today!
           
           // console.log(JSON.stringify(filteredGraphiteData));
           
+          //
+          // For multiple series, we should abbreviate the targets so they show succinctly in chart legend
+          // 
+          if (filteredGraphiteData.length > 1) {
+            filteredGraphiteData = _.map(filteredGraphiteData, function(stats) {
+              return {
+                  datapoints: stats.datapoints,
+                  target: this.shortenMetricName(stats.target)
+              };
+            }.bind(this));
+          }
+                    
           // Update new graphite target
           // this.widgetScope.$apply(function() {
-            // this.widgetScope.graphite = filteredGraphiteData; // TODO AW NOW Trying to get original callback working
-            WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(filteredGraphiteData));            
+          // this.widgetScope.graphite = filteredGraphiteData;
+          WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(filteredGraphiteData));            
           // }.bind(this)); 
           
         }.bind(this))
@@ -123,7 +135,7 @@ angular.module('app.service')
             console.error('Graphite Rejected' + data);
         });
        
-      }.bind(this);
+      }.bind(this); // end callGraphite()
       
       // Accessors used here and in graphite target editor 
       
@@ -145,7 +157,44 @@ angular.module('app.service')
         return this.dataModelOptions.params.target;
       };///.bind(this);
       
+      // For wildcard series, shorten the name of each series down by just displaying what wildcards resolve to!
+      this.shortenMetricName = function(metric) {
+        // var metric = 'stats.emea.prod-dtc-cell.eui-cms-webs.dtcp-cmswebs01.vertx.java.JVMMemory.HeapMemoryUsage_used';
+        // var target         = 'stats.emea.prod-dtc-cell.eui-cms-*.dtcp-cmswebs*.vertx.java.JVMMemory.HeapMemoryUsage_used';
+        
+        // How to escape user input in a regex
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+        // function escapeRegExp(string){
+        //   return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        // }
+
+        var targets = this.getTarget();
+        for (var i = 0; i < targets.length; i++) { 
+          if (targets[i].indexOf('*') < 0) continue; // Skip if no wildcards in this target
+          
+          // TODO Cache these when setTarget()
+          var reString = targets[i]
+            .replace(/([.+?^=!:${}()|\[\]\/\\])/g, "\\$1") // Escape everything apart from wildcard
+            .replace(/[*]/g, "(\\S+)"); // Converts wildcard asterix to parenthetic substring match 
+          // e.g. stats\.emea\.prod-dtc-cell\.eui-cms-(\S+)\.dtcp-cmswebs(\S+)\.vertx\.java\.JVMMemory\.HeapMemoryUsage_usedMemoryUsage_used
+          var re = new RegExp(reString);
+          
+          // Test whether returned metric matches this particular target
+          if (re.test(metric)) {
+            var wildcardMatches = re.exec(metric); // First array element is entire string
+            var shortTarget = "";
+            for (i = 1; i < wildcardMatches.length; i++) { shortTarget += wildcardMatches[i] + ' '; }
+            console.log('Abbreviated subject ' + metric + ' to ' + shortTarget);
+            return shortTarget;                     
+          }
+        }
+        // Attempt to shorten metric...if no wildcards then return original target
+        return metric;
+      };
+
+      //
       // Do stuff with data model parameters
+      //
       
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
     
@@ -239,6 +288,59 @@ angular.module('app.service')
     };
     return MultiSampleGraphiteTimeSeriesDataModel;
   })
+  
+  //
+  // Helper service to shortenMetricName
+  //
+  // .service('shortenMetricName', function (metric, targets) {
+  //   function Graphite2NVD3() {}
+  // 
+  //   // console.log(graphite);
+  //   // this.widgetScope.$watch('graphite', function(graphite) {
+  //   
+  //   Graphite2NVD3.convert = function (graphite) {
+  //     var nvd3Series;
+  //     if (graphite) {
+  //       nvd3Series = _.map(graphite, function(result) {
+  //         // All chart libraries use Unix epoch 
+  //         // Graphite uses second since epoch
+  //         // 1393940460
+  //         // NVD3 uses milliseconds since epoch
+  //         // 1062302400000
+  //         // Sample NVD3 Series
+  //         /*AW Convert to NVD3 Series
+  //          [
+  //           {
+  //             key: 'Series 1',
+  //             values: [
+  //               [ 1051675200000 , 0] ,
+  //               [ 1054353600000 , 7.2481659343222] ,
+  //               [ 1056945600000 , 9.2512381306992] ,
+  //               [ 1059624000000 , 11.341210982529] ,
+  //         }*/
+  //         return {
+  //             values:   _.map(result.datapoints, function(datapoint) {
+  //                 return [
+  //                     datapoint[1] * 1000,
+  //                     datapoint[0]
+  //                     ];
+  //               }),
+  //             key: result.target
+  //           };
+  //       });
+  //       
+  //       //         
+  //       // console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
+  //       // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
+  //     }
+  //     return nvd3Series;
+  //        
+  //     // }.bind(this));
+  //   };
+  //       
+  //   return Graphite2NVD3;
+  // })
+
   //
   // Helper service to convert graphite series to NVD3
   //
@@ -278,6 +380,8 @@ angular.module('app.service')
               key: result.target
             };
         });
+        
+        //         
         // console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
         // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
       }

@@ -16,9 +16,11 @@ angular.module('app')
           interactive: true,
           useInteractiveGuideline: true,
           tooltips: true,
+          showLegend: true,        
+          showControls: true,        
+          noData: 'No DATA for you AMIGO',        
           color: "colorFunction()",
-          stroke: "none",        
-          isArea: "true",        
+          isArea: true,        
           id: 'nvGraphiteMulti'
         },
         style: {
@@ -38,6 +40,8 @@ angular.module('app')
           interactive: true,
           useInteractiveGuideline: true,
           tooltips: true,
+          showLegend: true,        
+          showControls: true,        
           color: "colorFunction()",
 //          tooltipcontent: "toolTipContentFunction()",
           id: 'nvGraphiteMultiStacked'
