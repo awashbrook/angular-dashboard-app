@@ -4,10 +4,15 @@ angular.module('app')
   .controller('GraphiteOptionsCtrl', function (_, $scope, GraphiteDatasource) {
 
     // Graphite Editor Integration
-    // var dsConfig = {type: "graphite", url: "http://metrics.alpha.eikon-mon.int.thomsonreuters.com", default: true, name: "graphite"};
-    //       
-    // var dsConfig = new GraphiteDatasource(dsConfig);    
-    //
+    var dsConfig = {type: "graphite", url: "http://metrics.alpha.eikon-mon.int.thomsonreuters.com", default: true, name: "graphite"};
+          
+    // Set in scope for Grafana code
+    $scope.datasource = new GraphiteDatasource(dsConfig);    
+    
+    // 
+    // Deal with Angular Dashboard widgets
+    // 
+    
     var widget = $scope.widget;
 
     if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
@@ -40,18 +45,12 @@ angular.module('app')
           var newTargets = _.map(newTarget, function(target) {
             return target.target;
           });
+          widget.dataModel.setTarget(newTargets);
         }
-        widget.dataModel.setTarget(newTargets);
         // Log after updates ... the widget dataModelOptions are a snapshot from initial state of dashboard
         // They are not updated like the data source...so this can be misleading?!!!
         console.log(widget);
       }, true); // deepWatch == true to monitor the entire array
-      
-      ///////
-      
-      // var target = widget.dataModel.getTarget();
-
-      // My widget and grafana conflict on $scope.target - enumarable for grafana, not for me
       
     }
 

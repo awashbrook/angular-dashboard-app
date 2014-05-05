@@ -3,8 +3,8 @@
       <label for="metricName" class="col-sm-2 control-label">Metric Name</label>
       <div class="col-sm-10">
         <ul>
-          <li ng-repeat="target in targets">
-            <input type="text" class="form-control" name="metricName" ng-model="target.target">
+          <li ng-repeat="mytarget in targets">
+            <input type="text" class="form-control" name="metricName" ng-model="mytarget.target">
           </li>
         </ul>
       </div>
@@ -18,12 +18,12 @@
       
 <!-- Enable below to show graphite editor integration -->
 
-<!--
+
       <div ng-include src="'scripts/widgets/graphiteEditor/editor.html'"></div>
       
       <div class="editor-row" style="margin-top: 20px">
         <button class="btn btn-success pull-right" ng-click="add_target(panel.target)">Add query</button> 
--->
+
 
 
 

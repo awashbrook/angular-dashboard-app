@@ -23,21 +23,22 @@
           $button.appendTo(elem);
 
           $input.attr('data-provide', 'typeahead');
-          $input.typeahead({
-            source: allFunctions,
-            minLength: 1,
-            items: 10,
-            updater: function (value) {
-              var funcDef = gfunc.getFuncDef(value);
-
-              $scope.$apply(function() {
-                $scope.addFunction(funcDef);
-              });
-
-              $input.trigger('blur');
-              return '';
-            }
-          });
+          //AW TODO throws undefined for unknown reason although not called...don't know what functionality this breaks!
+          // $input.typeahead({
+          //   source: allFunctions,
+          //   minLength: 1,
+          //   items: 10,
+          //   updater: function (value) {
+          //     var funcDef = gfunc.getFuncDef(value);
+          // 
+          //     $scope.$apply(function() {
+          //       $scope.addFunction(funcDef);
+          //     });
+          // 
+          //     $input.trigger('blur');
+          //     return '';
+          //   }
+          // });
 
           $button.click(function() {
             $button.hide();

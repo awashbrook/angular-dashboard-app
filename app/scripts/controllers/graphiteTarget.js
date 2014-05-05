@@ -16,7 +16,7 @@ angular.module('app')
 
       delete $scope.parserError;
 
-      var parser = new Parser($scope.target);
+      var parser = new Parser($scope.target.target);
       var astNode = parser.getAst();
       if (astNode === null) {
         checkOtherSegments(0);
