@@ -41,7 +41,23 @@ angular.module('app')
       //     width: '50%'
       //   }
       // },
-
+      // {
+      //   name: 'RandomWalkBeta',
+      //   directive: 'rickshaw',
+      //   dataAttrName: 'rickshaw',
+      //   dataModelType: GraphiteTimeSeriesDataModel,
+      //   dataModelOptions: {
+      //     params: {
+      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+      //       from:'-1h',
+      //       until: 'now',
+      //       target:'randomWalk(%27random%20walk2%27)',
+      //     }
+      //   },
+      //   style: {
+      //     width: '400px'
+      //   }
+      // }
       // CORS enabled for BETA      
       // {
       //   name: 'RealCMSDataBeta',
@@ -61,182 +77,185 @@ angular.module('app')
       //   }
       // },
 
-      // {
-      //   name: 'nvSingleTargetAlpha',
-      //   directive: 'nvd3-line-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()',
-      //     color: "colorFunction()",
-      //     interactive: true,
-      //     useInteractiveGuideline: true,
-      //     tooltips: true,
-      //     showLegend: true,        
-      //     isArea: true,   
-      //     forcey: '[0,2]'         
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-48h',
-      //       until: 'now',
-      //       target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.*.os.cpu.usage']
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },     
-      // {
-      //   name: 'nvTwoTargetsAlpha',
-      //   directive: 'nvd3-line-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()',
-      //     color: "colorFunction()",
-      //     interactive: true,
-      //     useInteractiveGuideline: true,
-      //     tooltips: true,
-      //     showLegend: true,        
-      //     isArea: true,   
-      //     forcey: '[0,2]'
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-6h',
-      //       until: 'now',
-      //       target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage','stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage']
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },
-      // {
-      //   name: 'nvSingleTargetBeta',
-      //   directive: 'nvd3-line-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()',
-      //     color: "colorFunction()",
-      //     interactive: true,
-      //     useInteractiveGuideline: true,
-      //     tooltips: true,
-      //     showLegend: true,        
-      //     isArea: true,   
-      //     forcey: '[0,2]'
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-48h',
-      //       until: 'now',
-      //       target: ['stats.amers.beta-ntc-cell.eui-cms-*.*.os.cpu.usage']
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },
-      // {
-      //   name: 'nvDataCloudBeta',
-      //   directive: 'nvd3-line-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()',
-      //     color: "colorFunction()",
-      //     interactive: true,
-      //     useInteractiveGuideline: true,
-      //     tooltips: true,
-      //     showLegend: true,        
-      //     isArea: true,   
-      //     forcey: '[0,2]'
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-48h',
-      //       until: 'now',
-      //       target: ['stats.amers.beta-hdc-pod.dcl-dcs-*.*.os.cpu.usage']
-      //     }
-      //   },
-      //   style: {
-      //     width: '800px'
-      //   }
-      // },
-      // {
-      //   name: 'nvTwoTargetsBeta',
-      //   directive: 'nvd3-line-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()',
-      //     color: "colorFunction()",
-      //     interactive: true,
-      //     useInteractiveGuideline: true,
-      //     tooltips: true,
-      //     showLegend: true,        
-      //     isArea: true,   
-      //     forcey: '[0,2]'
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-6h',
-      //       until: 'now',
-      //       target: ['stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage','stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs02.os.cpu.usage']
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },
-      
-      
-      // {
-      //   name: 'nvRandomWalkAlpha',
-      //   directive: 'nvd3-stacked-area-chart',
-      //   dataAttrName: 'data',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   attrs: {
-      //     height: '350',
-      //     showXAxis: 'true',
-      //     showYAxis: 'true',
-      //     xAxisTickFormat: 'xAxisTickFormat()'
-      //   },
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-1h',
-      //       until: 'now',
-      //       // target:'randomWalk("random walk 2")', // No target: default random walk is three
-      //       $interval: 10
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },
+      {
+        name: 'nvSingleTargetAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'         
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },     
+      {
+        name: 'nvTwoTargetsAlpha',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp01.os.cpu.usage','stats.amers.alpha-us1-cell.eed-erp-cprp.us1i-erpcprp02.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
+        name: 'nvSingleTargetBeta',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.beta-ntc-cell.eui-cms-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
+      {
+        name: 'nvDataCloudBeta',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.beta-hdc-pod.dcl-dcs-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
+        name: 'nvTwoTargetsBeta',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-6h',
+            until: 'now',
+            target: ['stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs01.os.cpu.usage','stats.amers.beta-ntc-cell.eui-cms-webs.ntcs-cmswebs02.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },     
+      {
+        name: 'nvRandomWalkAlpha',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: 350,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          color: "colorFunction()"
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-1h',
+            until: 'now',
+            // target:'randomWalk("random walk 2")', // No target: default random walk is three
+            $interval: 10
+          }
+        },
+        style: {
+          width: '400px'
+        }
+      },
       {
         name: 'nvRandomWalkBeta',
         directive: 'nvd3-stacked-area-chart',
@@ -247,6 +266,11 @@ angular.module('app')
           showXAxis: true,
           showYAxis: true,
           xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          color: "colorFunction()"
         },
         dataModelOptions: {
           params: {
@@ -259,24 +283,8 @@ angular.module('app')
         style: {
           width: '400px'
         }
-      }
-      // {
-      //   name: 'RandomWalkBeta',
-      //   directive: 'rickshaw',
-      //   dataAttrName: 'rickshaw',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-1h',
-      //       until: 'now',
-      //       target:'randomWalk(%27random%20walk2%27)',
-      //     }
-      //   },
-      //   style: {
-      //     width: '400px'
-      //   }
-      // },
+      },
+      
       // CORS not enabled for PROD
       // http://metrics.eikon-mon.int.thomsonreuters.com/render/?from=-6h&until=now&target=stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage
       // {
@@ -299,11 +307,19 @@ angular.module('app')
       // {
     ];
 
-    var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
-      return {
-        name: widgetDef.name
-      };
-    });
+    // Make all widgets default
+    var defaultWidgets = [
+      {
+        name: 'nvRandomWalkBeta'
+      }
+    ];
+     
+    // Make all widgets default
+    // var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
+  //     return {
+  //       name: widgetDef.name
+  //     };
+  //   });
 
     $scope.dashboardOptions = {
       //AW TODO: Breaks my app...needs troubleshooting

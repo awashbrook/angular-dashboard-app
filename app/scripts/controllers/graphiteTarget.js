@@ -209,7 +209,9 @@ angular.module('app')
       $scope.target.target = _.reduce($scope.functions, wrapFunction, target);
 
       if ($scope.target.target !== oldTarget) {
-        $scope.$parent.get_data();
+        // AW Suppressing this update to the grafana chart...
+        // TODO do we need to update our chart?!
+        // $scope.$parent.get_data();
       }
     };
 
