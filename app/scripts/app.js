@@ -55,6 +55,10 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'ServerDataCtrl'
       })
+      .when('/datacloud', {
+        templateUrl: 'views/main.html',
+        controller: 'DataCloudCtrl'
+      })
       .when('/graphite', {
         templateUrl: 'views/main.html',
         controller: 'GraphiteCtrl'

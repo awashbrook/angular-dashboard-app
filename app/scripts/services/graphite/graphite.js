@@ -38,10 +38,14 @@ angular.module('app.service')
         
         var params = this.dataModelOptions.params;
         
+        var target = _.map(params.target, function(target) {
+          return target.replace(/[()]/g, "");
+        });
+        
         $http.get(params.url, { params: {
           //AW As per https://github.com/angular/angular.js/pull/1364
           // target may be being specified multiple times as an array which graphite requires
-          target: params.target,
+          target: target,
           from: params.from,
           until: params.until,
           format: 'json' // AW
@@ -174,7 +178,8 @@ angular.module('app.service')
           
           // TODO Cache these when setTarget()
           var reString = targets[i]
-            .replace(/([.+?^=!:${}()|\[\]\/\\])/g, "\\$1") // Escape everything apart from wildcard
+            // .replace(/([.+?^=!:${}()|\[\]\/\\])/g, "\\$1") // Escape everything apart from wildcard
+            .replace(/([.+?^=!:${}|\[\]\/\\])/g, "\\$1") // Remove parenthesis
             .replace(/[*]/g, "(\\S+)"); // Converts wildcard asterix to parenthetic substring match 
           // e.g. stats\.emea\.prod-dtc-cell\.eui-cms-(\S+)\.dtcp-cmswebs(\S+)\.vertx\.java\.JVMMemory\.HeapMemoryUsage_usedMemoryUsage_used
           var re = new RegExp(reString);

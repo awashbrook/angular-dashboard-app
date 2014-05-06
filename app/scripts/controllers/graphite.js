@@ -199,6 +199,66 @@ angular.module('app')
         }
       },
       {
+        name: 'nvStackedBeta',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: 400,
+          showXAxis: true,
+          showYAxis: true,
+          xAxisTickFormat: 'xAxisTickFormat()',
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          // showControls: true,        
+          color: "colorFunction()",
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.beta-ntc-cell.eui-cms-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
+        name: 'nvDataCloudProd',
+        directive: 'nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: {
+          height: '350',
+          showXAxis: 'true',
+          showYAxis: 'true',
+          xAxisTickFormat: 'xAxisTickFormat()',
+          color: "colorFunction()",
+          interactive: true,
+          useInteractiveGuideline: true,
+          tooltips: true,
+          showLegend: true,        
+          isArea: true,   
+          forcey: '[0,2]'
+        },
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.prod-hdc-pod.dcl-dcs-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
         name: 'nvTwoTargetsBeta',
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
