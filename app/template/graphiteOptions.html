@@ -7,17 +7,21 @@
             <input type="text" class="form-control" name="metricName" ng-model="mytarget.target">
           </li>
         </ul>
-   <label for="attrName" class="col-sm-2 control-label">Attributes</label>
         
         <!-- (key, value) in expression – where key and value can be any user defined identifiers, and expression is the scope expression giving the collection to enumerate.
         For example: (name, age) in {'adam':10, 'amalie':12} -->
-        <li ng-repeat="(attrName, attrValue in attrs)">
-          <label for="attrName" class="col-sm-2 control-label">attrName</label>
+         <label for="attrName" class="col-sm-2 control-label">Attributes</label>
+          <div class="col-sm-10">
+            <ul>
+              <li ng-repeat="(attrName, attrValue in attrs)">
+                <label for="attrName" class="col-sm-2 control-label">{{attrName}}</label>
+                <input type="text" class="form-control" name="attrValue" ng-model="attrValue">
+              </li>
+            </ul>
+          </div>
           
-          <input type="text" class="form-control" name="attrName" ng-model="attrValue">
-        </li>
-        
-      </div>
+          
+          
     </div>
     <!-- <div class="form-group">
         <label class="col-sm-2 control-label">Target&NonBreakingSpace;Name</label>

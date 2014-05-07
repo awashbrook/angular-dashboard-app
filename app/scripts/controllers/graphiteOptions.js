@@ -14,18 +14,19 @@ angular.module('app')
     // 
     
     var widget = $scope.widget;
-    
 
     if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
 
       // var oldTarget = widget.dataModelOptions.params.target;
       
       // Map native string array to array of objects with string property so $watch works!
+      
       var targets = _.map(widget.dataModel.getTarget(), function(target) {
         return {
           'target': target
         };
       });
+      
       // console.log("Setting target in options model scope: " + JSON.stringify(targets));
 
       // var filteredGraphiteData = _.map(graphiteData, function(stats) {
@@ -38,7 +39,7 @@ angular.module('app')
       // Target is the entire model of graphite controller
       $scope.targets = targets;
     
-      // Need watch of array values for target changes, deepest kind of watch
+      // Need watch of array values for target changes, deepest kind of watch, need for editing values
       $scope.$watch('targets', function (newTarget) {
         if (newTarget) {
           console.log(widget.title + ' graphite model options changed: ' + JSON.stringify(newTarget));
@@ -52,12 +53,18 @@ angular.module('app')
         // They are not updated like the data source...so this can be misleading?!!!
         console.log(widget);
       }, true); // deepWatch == true to monitor the entire array
-      
-      // Editor for Attributes
-      var attrs = widget.attrs;
-      $scope.attrs = attrs;
-      
-    }
+
+      // This is collection we want to watch changes in attrs.attrName for
+      // { attrName: { attrValue: value } }
+      // var attrs = _.forEach(widget.attrs, function(value, key){
+      //   return { 
+      //     key: { 'attrValue': value } 
+      //   };
+      // });
+      // 
+      // $scope.attrs = attrs;
+      $scope.attrs = widget.attrs;
+          }
 
   });
   

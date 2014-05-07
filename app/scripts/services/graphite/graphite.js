@@ -20,8 +20,8 @@ angular.module('app.service')
       // Ref parent framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        // templateUrl: 'template/widget-template.html', // from parent dashboard framework  
-        templateUrl: 'template/attributeOptions.html', 
+        templateUrl: 'template/widget-template.html', // from parent dashboard framework  
+        // templateUrl: 'template/attributeOptions.html', 
         
         resolve: {
           widget: function () {
@@ -40,7 +40,7 @@ angular.module('app.service')
         
         var params = this.dataModelOptions.params;
         
-        // Allow editors to use parenthesis
+        // Allow editors to use parenthesis in grahite metrics which becoming regex grouping parenthisis
         var target = _.map(params.target, function(target) {
           return target.replace(/[()]/g, "");
         });
