@@ -41,14 +41,14 @@ angular.module('app.service')
         var params = this.dataModelOptions.params;
         
         // Allow editors to use parenthesis in grahite metrics which becoming regex grouping parenthisis
-        var target = _.map(params.target, function(target) {
-          return target.replace(/[()]/g, "");
-        });
+        // var target = _.map(params.target, function(target) {
+        //   return target.replace(/[()]/g, "");
+        // });
         
         $http.get(params.url, { params: {
           //AW As per https://github.com/angular/angular.js/pull/1364
           // target may be being specified multiple times as an array which graphite requires
-          target: target,
+          target: params.target,
           from: params.from,
           until: params.until,
           format: 'json' // AW

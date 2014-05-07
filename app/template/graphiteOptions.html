@@ -13,14 +13,12 @@
          <label for="attrName" class="col-sm-2 control-label">Attributes</label>
           <div class="col-sm-10">
             <ul>
-              <li ng-repeat="(attrName, attrValue in attrs)">
+              <li ng-repeat="(attrName, attrValue) in attrs">
                 <label for="attrName" class="col-sm-2 control-label">{{attrName}}</label>
                 <input type="text" class="form-control" name="attrValue" ng-model="attrValue">
               </li>
             </ul>
-          </div>
-          
-          
+          </div>    
           
     </div>
     <!-- <div class="form-group">
