@@ -20,7 +20,9 @@ angular.module('app.service')
       // Ref parent framework dashboard directive
       // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html', // from parent dashbaord framework  
+        // templateUrl: 'template/widget-template.html', // from parent dashboard framework  
+        templateUrl: 'template/attributeOptions.html', 
+        
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
@@ -38,6 +40,7 @@ angular.module('app.service')
         
         var params = this.dataModelOptions.params;
         
+        // Allow editors to use parenthesis
         var target = _.map(params.target, function(target) {
           return target.replace(/[()]/g, "");
         });

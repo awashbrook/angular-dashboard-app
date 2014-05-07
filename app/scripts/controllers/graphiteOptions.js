@@ -14,6 +14,7 @@ angular.module('app')
     // 
     
     var widget = $scope.widget;
+    
 
     if (widget && widget.dataModel /* && widget.dataModel instanceof GraphiteTimeSeriesDataModel */) {
 
@@ -51,6 +52,10 @@ angular.module('app')
         // They are not updated like the data source...so this can be misleading?!!!
         console.log(widget);
       }, true); // deepWatch == true to monitor the entire array
+      
+      // Editor for Attributes
+      var attrs = widget.attrs;
+      $scope.attrs = attrs;
       
     }
 
