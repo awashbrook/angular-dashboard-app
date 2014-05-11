@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('DataCloudCtrl', function ($scope, $interval, WidgetDefaultsCtrl, GraphiteTimeSeriesDataModel) {
+  .controller('DataCloudCtrl', function ($scope, WidgetDefaultsCtrl, GraphiteTimeSeriesDataModel) {
          
   var attributes = {
       isArea: true,   
@@ -202,29 +202,28 @@ angular.module('app')
       }
     ];
     
-    // Make all widgets default
-    var defaultWidgets = [
-      { name: 'nvLineBetaIgst' },
-      { name: 'nvLineBetaVect' },
-      { name: 'nvLineAmersIgst' },
-      { name: 'nvLineAmersVect' },
-      { name: 'nvLineEmeaIgst' },
-      { name: 'nvLineEmeaVect' }
-    ];
+    // // Make all widgets default
+    // var defaultWidgets = [
+    //   { name: 'nvLineBetaIgst' },
+    //   { name: 'nvLineBetaVect' },
+    //   { name: 'nvLineAmersIgst' },
+    //   { name: 'nvLineAmersVect' },
+    //   { name: 'nvLineEmeaIgst' },
+    //   { name: 'nvLineEmeaVect' }
+    // ];
      
-    // Make all widgets default
-    var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
-      return {
-        name: widgetDef.name
-      };
-    });
+    // // Make all widgets default
+    // var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
+    //   return {
+    //     name: widgetDef.name
+    //   };
+    // });
     
     $scope.dashboardOptions = {
       //AW TODO: Breaks my app...needs troubleshooting
       // useLocalStorage: true, 
       widgetButtons: true,
-      widgetDefinitions: WidgetDefaultsCtrl.widgetDefinitions,
-      // defaultWidgets: defaultWidgets,
+      widgetDefinitions: WidgetDefaultsCtrl.widgetDefinitions.concat(widgetDefinitions),
       defaultWidgets: WidgetDefaultsCtrl.defaultWidgets,
       //AW Set custom widget template for graphite directive at dasboard level
       // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'

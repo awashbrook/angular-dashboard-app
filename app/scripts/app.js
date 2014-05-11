@@ -63,6 +63,10 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'GraphiteCtrl'
       })
+      .when('/default', {
+        templateUrl: 'views/main.html',
+        controller: 'WidgetDefaultsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
