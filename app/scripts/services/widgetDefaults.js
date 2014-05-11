@@ -1,29 +1,27 @@
 'use strict';
-
-angular.module('app')
-  .controller('WidgetDefaultsCtrl', function ($scope, $interval, GraphiteTimeSeriesDataModel) {
-    var attributes = {
-        isArea: true,   
-        height: 400,
-        showXAxis: true,
-        showYAxis: true,
-        xAxisTickFormat: 'xAxisTickFormat()',
-        interactive: true,
-        useInteractiveGuideline: true,
-        tooltips: true,
-        showLegend: true,        
-        // showControls: true,        
-        color: "colorFunction()",
-        forcey: '[0,2]'
-      };
-                        
-      var widgetDefinitions = [
+angular.module('app.service')
+  .constant('nvd3ChartDefAttrs', {
+      isArea: true,   
+      height: 400,
+      showXAxis: true,
+      showYAxis: true,
+      xAxisTickFormat: 'xAxisTickFormat()',
+      interactive: true,
+      useInteractiveGuideline: true,
+      tooltips: true,
+      showLegend: true,        
+      // showControls: true,        
+      color: "colorFunction()",
+      forcey: '[0,2]'
+  })
+  .service('WidgetDefaults', function (nvd3ChartDefAttrs, GraphiteTimeSeriesDataModel) {
+    this.widgetDefaultDefinitions = [
       {
         name: 'nvLineChartAlpha',
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
@@ -40,7 +38,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -57,7 +55,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
@@ -70,24 +68,24 @@ angular.module('app')
         }
       }
     ];
-     
+    
     // Make all widgets default
-    var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
+    this.defaultWidgets = _.map(this.widgetDefaultDefinitions, function (widgetDef) {
       return {
         name: widgetDef.name
       };
     });
 
-    // You can surf the default dashboard directly...it is a prototype after all
-    $scope.dashboardOptions = {
-      widgetButtons: true,
-      widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
-      //AW Set custom widget template for graphite directive at dasboard level
-      // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
-    };
-
-    $scope.xAxisTickFormat = function () {
+    // // You can surf the default dashboard directly...it is a prototype after all
+    // $scope.dashboardOptions = {
+    //   widgetButtons: true,
+    //   widgetDefinitions: widgetDefinitions,
+    //   defaultWidgets: defaultWidgets,
+    //   //AW Set custom widget template for graphite directive at dasboard level
+    //   // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
+    // };
+    
+    this.xAxisTickFormat = function () {
       return function (d) {
         return d3.time.format('%x')(new Date(d));
       };
@@ -111,8 +109,9 @@ angular.module('app')
     var indexColor = function(d, i) {
         return indexedColors[i];
     };
+    
     // Switch color scheme here
-    $scope.colorFunction = function() { 
+    this.colorFunction = function() { 
       return keyColor;
     };      
       
@@ -131,7 +130,5 @@ angular.module('app')
     //     '<p>' +  y + ' at ' + x + '</p>';
     //   };
     // };
-
-
   
   });

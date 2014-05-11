@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('DataCloudCtrl', function ($scope, WidgetDefaultsCtrl, GraphiteTimeSeriesDataModel) {
+  .controller('DataCloudCtrl', function ($scope, WidgetDefaults, GraphiteTimeSeriesDataModel) {
          
   var attributes = {
       isArea: true,   
@@ -220,36 +220,16 @@ angular.module('app')
     // });
     
     $scope.dashboardOptions = {
-      //AW TODO: Breaks my app...needs troubleshooting
-      // useLocalStorage: true, 
       widgetButtons: true,
-      widgetDefinitions: WidgetDefaultsCtrl.widgetDefinitions.concat(widgetDefinitions),
-      defaultWidgets: WidgetDefaultsCtrl.defaultWidgets,
-      //AW Set custom widget template for graphite directive at dasboard level
-      // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
+      widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions),
+      defaultWidgets: WidgetDefaults.defaultWidgets
     };
 
-    $scope.xAxisTickFormat = function () {
-      return function (d) {
-        return d3.time.format('%x')(new Date(d));
-      };
-    };
-
-    
-    // D3.color() schemes nvd3/test/stackedAreaChartTest.html
-    // var d3scheme = d3.scale.category10(); // Primary Colors
-    var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
-    //var d3scheme = d3.scale.category20b(); // Subtle shades of purple
-    // var d3scheme = d3.scale.category20c(); // Subtle shades of blue
-    var keyColor = function(d, i) {
-      return d3scheme(d.key);
-    };    
-    // Switch color scheme here
-    $scope.colorFunction = function() { 
-      return keyColor;
-    };
-      
+    // Chart Options
+    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
+    $scope.colorFunction = WidgetDefaults.colorFunction;
     // external controls
+
     $scope.addWidget = function (directive) {
       $scope.dashboardOptions.addWidget({
         name: directive
