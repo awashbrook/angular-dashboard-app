@@ -15,14 +15,14 @@ angular.module('app.service')
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
       // Setup editing options for data model using widget scope using editModalOptions
-      
-      // widget = WidgetModel = dataModel.widgetScope.widget  
+
+      // widget = WidgetModel = dataModel.widgetScope.widget
       // Ref parent framework dashboard directive
-      // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js            
+      // https://github.com/nickholub/angular-ui-dashboard/blob/master/src/directives/dashboard.js
       this.widgetScope.widget.editModalOptions = {
-        templateUrl: 'template/widget-template.html', // from parent dashboard framework  
-        // templateUrl: 'template/attributeOptions.html', 
-        
+        templateUrl: 'template/widget-template.html', // from parent dashboard framework
+        // templateUrl: 'template/attributeOptions.html',
+
         resolve: {
           widget: function () {
             return this.widgetScope.widget;
@@ -32,19 +32,19 @@ angular.module('app.service')
           }
         },
         controller: 'WidgetDialogCtrl'
-      };      
-      
-      // Main function to call graphite and update $scope.graphite in data model 
-      
+      };
+
+      // Main function to call graphite and update $scope.graphite in data model
+
       this.callGraphite = function () {
-        
+
         var params = this.dataModelOptions.params;
-        
+
         // Allow editors to use parenthesis in grahite metrics which becoming regex grouping parenthisis
         // var target = _.map(params.target, function(target) {
         //   return target.replace(/[()]/g, "");
         // });
-        
+
         $http.get(params.url, { params: {
           //AW As per https://github.com/angular/angular.js/pull/1364
           // target may be being specified multiple times as an array which graphite requires
@@ -56,9 +56,9 @@ angular.module('app.service')
         .success(function (graphiteData) {
           // console.log('Graphite Responded');
           // console.log(JSON.stringify(graphiteData));
-          
+
           // Strip out null data points: this is how we did it dashing with Ruby
-          
+
           // graphite = [
           //     {
           //       target: "stats_counts.http.ok",
@@ -71,22 +71,22 @@ angular.module('app.service')
           //   ]
 
           // result.each do |stats|
-          //   non_nil_points = (stats[:datapoints].select { |point| not point[0].nil? })    
+          //   non_nil_points = (stats[:datapoints].select { |point| not point[0].nil? })
           //   if non_nil_points.size == 0
-          //     puts ">> WARNING >> All data was Null for for #{url_path_and_query}" 
+          //     puts ">> WARNING >> All data was Null for for #{url_path_and_query}"
           //   end
-          //   stats[:datapoints] = non_nil_points 
+          //   stats[:datapoints] = non_nil_points
           // end
-        
+
           //AW Below partially iterative doesn't work because looping over function is BAD!
           // for (var i = 0; i < graphiteData.length; i++) {
           //   var non_nil_points = _.filter(graphiteData[i].datapoints, function(tuple) { return tuple[0] != null; } );
-          //   if (non_nil_points.length == 0) { 
+          //   if (non_nil_points.length == 0) {
           //     console.log('>> WARNING >> All data was Null from Graphite!');
-          //   } 
+          //   }
           //   graphiteData[i].datapoints = non_nil_points;
-          // }          
-        
+          // }
+
           var filteredGraphiteData = _.map(graphiteData, function(stats) {
             return {
               target: stats.target,
@@ -106,22 +106,22 @@ angular.module('app.service')
           if (emptySeries === filteredGraphiteData.length) {
             console.warn('Graphite responded with NO DATA, invalid targets may have been specified: ' + this.getTarget() );
           }  else {
-            // If Data received, then poll for updates...enable pseudo-real-time graphite updates 
+            // If Data received, then poll for updates...enable pseudo-real-time graphite updates
 
             // TODO Suppress below until we need to tear down the poll when $destroy called
             // this.intervalPromise = $interval(this.callGraphite, interval * 1000);
-            
+
           }
-          
+
           // Empty updates should still propagate to graph and clear of give "No Data Available"
           // This works really well with NVD3 giving "No Data Available" and leaving old data set up!
           // TODO: Does NOT work with Rickshaw which chokes on empty series today!
-          
+
           // console.log(JSON.stringify(filteredGraphiteData));
-          
+
           //
           // For multiple series, we should abbreviate the targets so they show succinctly in chart legend
-          // 
+          //
           if (filteredGraphiteData.length > 1) {
             filteredGraphiteData = _.map(filteredGraphiteData, function(stats) {
               return {
@@ -130,45 +130,50 @@ angular.module('app.service')
               };
             }.bind(this));
           }
-                    
+
           // Update new graphite target
           // this.widgetScope.$apply(function() {
           // this.widgetScope.graphite = filteredGraphiteData;
-          WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(filteredGraphiteData));            
-          // }.bind(this)); 
-          
+          WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(filteredGraphiteData));
+          // }.bind(this));
+
         }.bind(this))
         .error(function (data, status) {
             console.error('Graphite Rejected' + data);
         });
-       
+
       }.bind(this); // end callGraphite()
-      
-      // Accessors used here and in graphite target editor 
-      
+
+      // Accessors used here and in graphite target editor
+
       GraphiteTimeSeriesDataModel.prototype.setTarget = function (newTarget) {
         if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget))) {
-        
+
+          console.log(this.widgetScope.widget.title + ' graphite model options changed: ' + JSON.stringify(newTarget));
+
           this.dataModelOptions.params.target = newTarget;
 
-          // Log after updates 
+          // Log after updates
           console.log(this.dataModelOptions.params);
           console.log(this);
-        
+
           this.callGraphite();
+
+          this.widgetScope.$emit('widgetChanged', this.widgetScope.widget);
         }
+        return false;
       };//.bind(this);
-      
+
       GraphiteTimeSeriesDataModel.prototype.getTarget = function () {
         // var oldTarget = widget.dataModelOptions.params.target;
         return this.dataModelOptions.params.target;
       };///.bind(this);
-      
+
       // For wildcard series, shorten the name of each series down by just displaying what wildcards resolve to!
       this.shortenMetricName = function(metric) {
         // var metric = 'stats.emea.prod-dtc-cell.eui-cms-webs.dtcp-cmswebs01.vertx.java.JVMMemory.HeapMemoryUsage_used';
         // var target         = 'stats.emea.prod-dtc-cell.eui-cms-*.dtcp-cmswebs*.vertx.java.JVMMemory.HeapMemoryUsage_used';
-        
+
         // How to escape user input in a regex
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
         // function escapeRegExp(string){
@@ -176,24 +181,24 @@ angular.module('app.service')
         // }
 
         var targets = this.getTarget();
-        for (var i = 0; i < targets.length; i++) { 
+        for (var i = 0; i < targets.length; i++) {
           if (targets[i].indexOf('*') < 0) continue; // Skip if no wildcards in this target
-          
+
           // TODO Cache these when setTarget()
           var reString = targets[i]
             // .replace(/([.+?^=!:${}()|\[\]\/\\])/g, "\\$1") // Escape everything apart from wildcard
             .replace(/([.+?^=!:${}|\[\]\/\\])/g, "\\$1") // Remove parenthesis
-            .replace(/[*]/g, "(\\S+)"); // Converts wildcard asterix to parenthetic substring match 
+            .replace(/[*]/g, "(\\S+)"); // Converts wildcard asterix to parenthetic substring match
           // e.g. stats\.emea\.prod-dtc-cell\.eui-cms-(\S+)\.dtcp-cmswebs(\S+)\.vertx\.java\.JVMMemory\.HeapMemoryUsage_usedMemoryUsage_used
           var re = new RegExp(reString);
-          
+
           // Test whether returned metric matches this particular target
           if (re.test(metric)) {
             var wildcardMatches = re.exec(metric); // First array element is entire string
             var shortTarget = "";
             for (i = 1; i < wildcardMatches.length; i++) { shortTarget += wildcardMatches[i] + ' '; }
             console.log('Abbreviated subject ' + metric + ' to ' + shortTarget);
-            return shortTarget;                     
+            return shortTarget;
           }
         }
         // Attempt to shorten metric...if no wildcards then return original target
@@ -203,13 +208,13 @@ angular.module('app.service')
       //
       // Do stuff with data model parameters
       //
-      
+
       var params = this.dataModelOptions ? this.dataModelOptions.params : {};
-    
+
       //AW TODO do I really like this: Rafe does!
-      
+
       // Default Random walk if no target provided
-      // params.target || (params.target = 
+      // params.target || (params.target =
       this.getTarget() || this.setTarget(
         [
         // 'randomWalk(%27random%20walk2%27)',
@@ -223,16 +228,16 @@ angular.module('app.service')
       // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
       // https://github.com/angular/angular.js/blob/ffe5115355baa6ee2136b6fb5e4828e4e2fa58f8/src/ng/interval.js#L133
       var interval = params.interval || (interval = 30);
-      
+
       this.callGraphite();
-      
+
     };
 
     GraphiteTimeSeriesDataModel.prototype.destroy = function () {
       WidgetDataModel.prototype.destroy.call(this);
       $interval.cancel(this.intervalPromise);
     };
-    
+
     return GraphiteTimeSeriesDataModel;
   })
   //
@@ -240,31 +245,31 @@ angular.module('app.service')
   //
   .factory('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function SampleGraphiteTimeSeriesDataModel() {}
-    
+
     SampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
 
     SampleGraphiteTimeSeriesDataModel.prototype.init = function () {
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
 
       var i = 0;
-      // Main function to call graphite and update $scope.graphite in data model 
-      this.callGraphite = function () {        
+      // Main function to call graphite and update $scope.graphite in data model
+      this.callGraphite = function () {
         // console.log(JSON.stringify(graphiteSampleData));
         this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
         i++;
       }.bind(this);
-            
+
       this.callGraphite();
-      
-      // Enable poll for pseudo-real-time graphite updates 
+
+      // Enable poll for pseudo-real-time graphite updates
       this.intervalPromise = $interval(this.callGraphite, 5 * 1000);
-      
+
       this.widgetScope.$watch('graphite', function(graphite) {
-        // console.log(graphite);                
-        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));        
+        // console.log(graphite);
+        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));
       }.bind(this));
     };
-  
+
     SampleGraphiteTimeSeriesDataModel.prototype.destroy = function () {
       WidgetDataModel.prototype.destroy.call(this);
       $interval.cancel(this.intervalPromise);
@@ -276,19 +281,19 @@ angular.module('app.service')
   //
   .factory('MultiSampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData, Graphite2NVD3) {
     function MultiSampleGraphiteTimeSeriesDataModel() {}
-    
+
     MultiSampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
 
     MultiSampleGraphiteTimeSeriesDataModel.prototype.init = function () {
       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
-  
+
       this.widgetScope.graphite = graphiteSampleData;
-      
+
       this.widgetScope.$watch('graphite', function(graphite) {
-        // console.log(graphite);                
-        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));        
+        // console.log(graphite);
+        WidgetDataModel.prototype.updateScope.call(this, Graphite2NVD3.convert(graphite));
       }.bind(this));
-    };    
+    };
 
     MultiSampleGraphiteTimeSeriesDataModel.prototype.destroy = function () {
       WidgetDataModel.prototype.destroy.call(this);
@@ -296,21 +301,21 @@ angular.module('app.service')
     };
     return MultiSampleGraphiteTimeSeriesDataModel;
   })
-  
+
   //
   // Helper service to shortenMetricName
   //
   // .service('shortenMetricName', function (metric, targets) {
   //   function Graphite2NVD3() {}
-  // 
+  //
   //   // console.log(graphite);
   //   // this.widgetScope.$watch('graphite', function(graphite) {
-  //   
+  //
   //   Graphite2NVD3.convert = function (graphite) {
   //     var nvd3Series;
   //     if (graphite) {
   //       nvd3Series = _.map(graphite, function(result) {
-  //         // All chart libraries use Unix epoch 
+  //         // All chart libraries use Unix epoch
   //         // Graphite uses second since epoch
   //         // 1393940460
   //         // NVD3 uses milliseconds since epoch
@@ -336,16 +341,16 @@ angular.module('app.service')
   //             key: result.target
   //           };
   //       });
-  //       
-  //       //         
+  //
+  //       //
   //       // console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
   //       // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
   //     }
   //     return nvd3Series;
-  //        
+  //
   //     // }.bind(this));
   //   };
-  //       
+  //
   //   return Graphite2NVD3;
   // })
 
@@ -357,12 +362,12 @@ angular.module('app.service')
 
     // console.log(graphite);
     // this.widgetScope.$watch('graphite', function(graphite) {
-    
+
     Graphite2NVD3.convert = function (graphite) {
       var nvd3Series;
       if (graphite) {
         nvd3Series = _.map(graphite, function(result) {
-          // All chart libraries use Unix epoch 
+          // All chart libraries use Unix epoch
           // Graphite uses second since epoch
           // 1393940460
           // NVD3 uses milliseconds since epoch
@@ -388,22 +393,22 @@ angular.module('app.service')
               key: result.target
             };
         });
-        
-        //         
+
+        //
         // console.log("Generated NVD3 Series" + JSON.stringify(nvd3Series));
         // WidgetDataModel.prototype.updateScope.call(this, nvd3Series);
       }
       return nvd3Series;
-         
+
       // }.bind(this));
     };
-        
+
     return Graphite2NVD3;
   })
   // i = 0
-  // 
+  //
   // SCHEDULER.every '1s' do
-  //  
+  //
   //   # graphite = [
   //   #     {
   //   #       target: "stats_counts.http.ok",
@@ -415,50 +420,50 @@ angular.module('app.service')
   //   #     }
   //   #   ]
   //   #   send_event('graphite', series: graphite)
-  // 
-  // 
+  //
+  //
   //   send_event('graphite1', series: [ graphite[0] ])
   //   send_event('graphite2', series: [ graphite[1] ])
   //   send_event('graphite3', series: [ graphite[2] ])
   //   send_event('graphite4', series: [ graphite[3] ])
-  // 
+  //
   //   # send_event('graphite-overlay', series: [ graphite[0], graphite[1], graphite[2], graphite[3] ] )
-  // 
+  //
   //   send_event('graphite-cyclic', series: [ graphite[i % graphite.size] ] )
   //   i += 1;
-  // 
+  //
   // end
 //   .service('SampleGraphiteTimeSeriesDataModel', function (WidgetDataModel,  $interval, graphiteSampleData) {
 //     function SampleGraphiteTimeSeriesDataModel() {}
-//     
+//
 //     SampleGraphiteTimeSeriesDataModel.prototype = Object.create(WidgetDataModel.prototype);
-// 
+//
 //     SampleGraphiteTimeSeriesDataModel.prototype.init = function () {
 //       WidgetDataModel.prototype.init.call(this); // super is a no-op today!
-//     
+//
 //       var i = 0;
-//       
-//       // Main function to call graphite and update $scope.graphite in data model 
+//
+//       // Main function to call graphite and update $scope.graphite in data model
 //       this.callGraphite = function () {
-//         
+//
 //         console.log(JSON.stringify(graphiteSampleData));
 //         // WidgetDataModel.prototype.updateScope.call(this, graphiteSampleData);
 //         this.widgetScope.graphite = [ graphiteSampleData[i % graphiteSampleData.length] ];
 //         i++;
 //       }.bind(this);
-//             
+//
 //       this.callGraphite();
-//       
-//       // Enable poll for pseudo-real-time graphite updates 
+//
+//       // Enable poll for pseudo-real-time graphite updates
 //       this.intervalPromise = $interval(this.callGraphite, 5 * 1000);
-//       
+//
 //       // $scope.$watch('target', function (newTarget) {
 //       this.widgetScope.$watch('graphite', function(graphite) {
 //         console.log(graphite);
-//         
+//
 //         // TODO factor out into “interpreter” service translating between the formats
 //         // so the controller registers$scope.$watch(‘graphite’, $scope.nvd3Data = interpreter.translate()) (pseudo code ;) )
-// 
+//
 //           if (graphite) {
 //             var rickshawSeries = _.map(graphite, function(result) {
 //               /*AW Convert to Rickshaw Series
@@ -484,14 +489,14 @@ angular.module('app.service')
 //             });
 //             console.log("Generated Rickshaw Series" + JSON.stringify(rickshawSeries));
 // //             this.widgetScope.$apply(function() {
-//               // this.widgetScope.rickshaw = rickshawSeries; 
+//               // this.widgetScope.rickshaw = rickshawSeries;
 //               WidgetDataModel.prototype.updateScope.call(this, rickshawSeries);
 //               // this.updateScope(rickshawSeries);
-// //             }.bind(this)); 
-//           }     
+// //             }.bind(this));
+//           }
 //       }.bind(this));
 //     };
-//   
+//
 //     SampleGraphiteTimeSeriesDataModel.prototype.destroy = function () {
 //       WidgetDataModel.prototype.destroy.call(this);
 //       $interval.cancel(this.intervalPromise);
@@ -516,16 +521,16 @@ angular.module('app.service')
     {target: 'stats.emea.prod-dtc-cell.eui-cms-webs.dtcp-cmswebs03.vertx.java.JVMMemory.HeapMemoryUsage_used', datapoints:[[106241400.0, 1393940460], [124356920.0, 1393940520], [136911032.0, 1393940580], [149807408.0, 1393940640], [162221640.0, 1393940700], [177884960.0, 1393940760], [195594944.0, 1393940820], [210527504.0, 1393940880], [223318392.0, 1393940940], [237396416.0, 1393941000], [253169504.0, 1393941060], [275016352.0, 1393941120], [296617112.0, 1393941180], [47358592.0, 1393941240], [67454704.0, 1393941300], [85406224.0, 1393941360], [102110968.0, 1393941420], [119904216.0, 1393941480], [141186752.0, 1393941540], [163469896.0, 1393941600], [183576664.0, 1393941660], [209404248.0, 1393941720], [225033264.0, 1393941780], [244241720.0, 1393941840], [263168512.0, 1393941900], [281459472.0, 1393941960], [297377928.0, 1393942020], [42347744.0, 1393942080], [54675472.0, 1393942140], [70553944.0, 1393942200], [83212240.0, 1393942260], [95616976.0, 1393942320], [108799896.0, 1393942380], [124201408.0, 1393942440], [152388112.0, 1393942500], [164743552.0, 1393942560], [186743152.0, 1393942620], [199353832.0, 1393942680], [218172160.0, 1393942740], [239158280.0, 1393942800], [251746912.0, 1393942860], [277406168.0, 1393942920], [299041168.0, 1393942980], [52141064.0, 1393943040], [73975320.0, 1393943100], [86416408.0, 1393943160], [100683480.0, 1393943220], [117015008.0, 1393943280], [129322656.0, 1393943340], [145335944.0, 1393943400], [157683904.0, 1393943460], [176171176.0, 1393943520], [200489264.0, 1393943580], [221400176.0, 1393943640], [233635768.0, 1393943700], [252307112.0, 1393943760], [265273368.0, 1393943820], [278043160.0, 1393943880], [290927448.0, 1393943940], [39280320.0, 1393944000], [64352912.0, 1393944060], [79316096.0, 1393944120], [100313816.0, 1393944180], [118835040.0, 1393944240], [149221384.0, 1393944300], [168960264.0, 1393944360], [181840160.0, 1393944420], [204510016.0, 1393944480], [222646488.0, 1393944540], [242971272.0, 1393944600], [267835768.0, 1393944660], [285965896.0, 1393944720], [39347592.0, 1393944780], [55337504.0, 1393944840], [73758904.0, 1393944900], [91520936.0, 1393944960], [107345608.0, 1393945020], [120263016.0, 1393945080], [134068624.0, 1393945140], [146396616.0, 1393945200], [161828400.0, 1393945260], [176437064.0, 1393945320], [194388312.0, 1393945380], [207156088.0, 1393945440], [226034208.0, 1393945500], [240829944.0, 1393945560], [263839312.0, 1393945620], [276071680.0, 1393945680], [292312248.0, 1393945740], [42283728.0, 1393945800], [58023632.0, 1393945860], [78461472.0, 1393945920], [92940592.0, 1393945980], [105628760.0, 1393946040], [124866616.0, 1393946100], [145429984.0, 1393946160], [163459216.0, 1393946220], [181203632.0, 1393946280], [196612848.0, 1393946340], [208790240.0, 1393946400], [230575520.0, 1393946460], [246406536.0, 1393946520], [266605440.0, 1393946580], [281131400.0, 1393946640], [299485696.0, 1393946700], [46972104.0, 1393946760], [61389680.0, 1393946820], [79384728.0, 1393946880], [93885672.0, 1393946940], [107426800.0, 1393947000], [127476360.0, 1393947060], [140258528.0, 1393947120], [155776224.0, 1393947180], [168120368.0, 1393947240], [183988448.0, 1393947300], [204426496.0, 1393947360], [218851496.0, 1393947420], [233561944.0, 1393947480], [250398616.0, 1393947540]]},
     {target: 'stats.emea.prod-dtc-cell.eui-cms-webs.dtcp-cmswebs04.vertx.java.JVMMemory.HeapMemoryUsage_used', datapoints:[[268451392.0, 1393940460], [282683144.0, 1393940520], [298979608.0, 1393940580], [43716728.0, 1393940640], [59950488.0, 1393940700], [77875448.0, 1393940760], [98389584.0, 1393940820], [120574664.0, 1393940880], [140587016.0, 1393940940], [156903104.0, 1393941000], [175736464.0, 1393941060], [193364184.0, 1393941120], [209308968.0, 1393941180], [226120016.0, 1393941240], [238417904.0, 1393941300], [261597616.0, 1393941360], [281210232.0, 1393941420], [299471552.0, 1393941480], [50503344.0, 1393941540], [67930376.0, 1393941600], [92268112.0, 1393941660], [115203976.0, 1393941720], [137238256.0, 1393941780], [156170392.0, 1393941840], [174833240.0, 1393941900], [194241576.0, 1393941960], [208762952.0, 1393942020], [226667576.0, 1393942080], [251726560.0, 1393942140], [269638248.0, 1393942200], [294864264.0, 1393942260], [46533336.0, 1393942320], [59013952.0, 1393942380], [74795744.0, 1393942440], [92528496.0, 1393942500], [105133632.0, 1393942560], [117716976.0, 1393942620], [142452432.0, 1393942680], [162156560.0, 1393942740], [181354192.0, 1393942800], [193776280.0, 1393942860], [211773936.0, 1393942920], [229664240.0, 1393942980], [253734496.0, 1393943040], [272285496.0, 1393943100], [284721080.0, 1393943160], [33879256.0, 1393943220], [50061632.0, 1393943280], [66155432.0, 1393943340], [80395560.0, 1393943400], [94775880.0, 1393943460], [108575560.0, 1393943520], [124844104.0, 1393943580], [145002200.0, 1393943640], [157207712.0, 1393943700], [178242776.0, 1393943760], [196749664.0, 1393943820], [208984776.0, 1393943880], [228439960.0, 1393943940], [241987728.0, 1393944000], [260641232.0, 1393944060], [279827416.0, 1393944120], [294495216.0, 1393944180], [46750504.0, 1393944240], [67888000.0, 1393944300], [91756216.0, 1393944360], [115643616.0, 1393944420], [135569784.0, 1393944480], [153921416.0, 1393944540], [176446584.0, 1393944600], [189659648.0, 1393944660], [210884912.0, 1393944720], [224735608.0, 1393944780], [237000840.0, 1393944840], [249680552.0, 1393944900], [265649168.0, 1393944960], [279247608.0, 1393945020], [296137040.0, 1393945080], [42137840.0, 1393945140], [54459088.0, 1393945200], [73146080.0, 1393945260], [85680600.0, 1393945320], [108270504.0, 1393945380], [125174528.0, 1393945440], [144832424.0, 1393945500], [159450616.0, 1393945560], [178283432.0, 1393945620], [190890200.0, 1393945680], [205053680.0, 1393945740], [219737856.0, 1393945800], [239942720.0, 1393945860], [265438136.0, 1393945920], [286053376.0, 1393945980], [298234952.0, 1393946040], [46581016.0, 1393946100], [65216864.0, 1393946160], [83747720.0, 1393946220], [99563168.0, 1393946280], [123922272.0, 1393946340], [136580288.0, 1393946400], [150681184.0, 1393946460], [173560064.0, 1393946520], [189358568.0, 1393946580], [201608552.0, 1393946640], [213879984.0, 1393946700], [235837648.0, 1393946760], [248025656.0, 1393946820], [264158344.0, 1393946880], [278478744.0, 1393946940], [293660752.0, 1393947000], [38437840.0, 1393947060], [56784600.0, 1393947120], [72983680.0, 1393947180], [88166248.0, 1393947240], [104338952.0, 1393947300], [121935840.0, 1393947360], [144223192.0, 1393947420], [163532080.0, 1393947480], [179362576.0, 1393947540]]}
   ]);
-      
+
     // AW Jan's Rickshaw series Graphite controller from Capman
     // Not ideal with params from directive scope passed...
-    // How can we better share data between directive scope and utility functions in services?!  
-    // 
+    // How can we better share data between directive scope and utility functions in services?!
+    //
     // This is NOT USED, for the record only
-    // 
+    //
     // fetchRickshawSeries: function(url, target, from, until) {
     //   var deferred = $q.defer();
-    // 
+    //
     //   $http.get(url, { params: {
     //       target: target,
     //       from: from,
@@ -544,12 +549,12 @@ angular.module('app.service')
     //               name: result.target
     //           };
     //       });
-    // 
+    //
     //       deferred.resolve(seriesData);
     //   }).
     //   error(function (data, status) {
     //       deferred.reject(status);
     //   });
-    // 
+    //
     //   return deferred.promise;
     // }
