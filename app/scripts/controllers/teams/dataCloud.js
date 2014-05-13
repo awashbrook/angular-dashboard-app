@@ -1,22 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('DataCloudCtrl', function ($scope, $window, WidgetDefaults, GraphiteTimeSeriesDataModel) {
-
-  var attributes = {
-      isArea: true,
-      height: 400,
-      showXAxis: true,
-      showYAxis: true,
-      xAxisTickFormat: 'xAxisTickFormat()',
-      interactive: true,
-      useInteractiveGuideline: true,
-      tooltips: true,
-      showLegend: true,
-      // showControls: true,
-      color: "colorFunction()",
-      forcey: '[0,2]'
-    };
+  .controller('DataCloudCtrl', function ($scope, $window, nvd3ChartDefAttrs, WidgetDefaults, GraphiteTimeSeriesDataModel) {
 
     var widgetDefinitions = [
     {
@@ -24,13 +9,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+//          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+          target: ['stats.amers.beta-hdc-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
@@ -42,13 +28,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+//          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+          target: ['stats.amers.beta-hdc-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -60,13 +47,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+//          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+          target: ['stats.emea.prod-dtc-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
@@ -78,13 +66,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+//          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+          target: ['stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -96,13 +85,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+//          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
+          target: ['stats.amers.prod-hdc-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
@@ -114,13 +104,14 @@ angular.module('app')
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
       dataModelType: GraphiteTimeSeriesDataModel,
-      attrs: attributes,
+      attrs: nvd3ChartDefAttrs,
       dataModelOptions: {
         params: {
           url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
           from:'-48h',
           until: 'now',
-          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+//          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
+          target: ['stats.amers.prod-hdc-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -132,7 +123,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -151,7 +142,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -169,7 +160,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
@@ -187,7 +178,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: attributes,
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
