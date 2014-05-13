@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('MainCtrl', function ($scope, $interval, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
+  .controller('MainCtrl', function ($scope, $interval, $window, stackedAreaChartSampleData, pieChartSampleData, RandomTimeSeriesDataModel, RandomTopNDataModel, SampleGraphiteTimeSeriesDataModel, MultiSampleGraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
       {
         name: 'nvGraphiteMulti',
@@ -177,6 +177,8 @@ angular.module('app')
     });
 
     $scope.dashboardOptions = {
+      storage: $window.localStorage,
+      storageId: 'andy-dashboard-main',
       widgetButtons: true,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets

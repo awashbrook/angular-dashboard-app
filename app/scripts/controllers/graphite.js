@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('GraphiteCtrl', function ($scope, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel) {
+  .controller('GraphiteCtrl', function ($scope, $window, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
     
       //AW This is how Rickshaw graphite widget was invoked in previous project
@@ -384,8 +384,8 @@ angular.module('app')
   //   });
 
     $scope.dashboardOptions = {
-      //AW TODO: Breaks my app...needs troubleshooting
-      // useLocalStorage: true, 
+      storage: $window.localStorage,
+      storageId: 'andy-dashboard-graphite',
       widgetButtons: true,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,

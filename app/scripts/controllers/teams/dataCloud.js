@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('app')
-  .controller('DataCloudCtrl', function ($scope, WidgetDefaults, GraphiteTimeSeriesDataModel) {
-         
+  .controller('DataCloudCtrl', function ($scope, $window, WidgetDefaults, GraphiteTimeSeriesDataModel) {
+
   var attributes = {
-      isArea: true,   
+      isArea: true,
       height: 400,
       showXAxis: true,
       showYAxis: true,
@@ -12,12 +12,12 @@ angular.module('app')
       interactive: true,
       useInteractiveGuideline: true,
       tooltips: true,
-      showLegend: true,        
-      // showControls: true,        
+      showLegend: true,
+      // showControls: true,
       color: "colorFunction()",
       forcey: '[0,2]'
     };
-            
+
     var widgetDefinitions = [
     {
       name: 'nvLineBetaIgst',
@@ -201,7 +201,7 @@ angular.module('app')
         }
       }
     ];
-    
+
     // // Make all widgets default
     // var defaultWidgets = [
     //   { name: 'nvLineBetaIgst' },
@@ -211,15 +211,17 @@ angular.module('app')
     //   { name: 'nvLineEmeaIgst' },
     //   { name: 'nvLineEmeaVect' }
     // ];
-     
+
     // // Make all widgets default
     // var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
     //   return {
     //     name: widgetDef.name
     //   };
     // });
-    
+
     $scope.dashboardOptions = {
+      storage: $window.localStorage,
+      storageId: 'andy-dashboard-datacloud',
       widgetButtons: true,
       widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions),
       defaultWidgets: WidgetDefaults.defaultWidgets
