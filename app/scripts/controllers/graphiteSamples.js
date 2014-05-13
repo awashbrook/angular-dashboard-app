@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('GraphiteCtrl', function ($scope, $window, $interval, stackedAreaChartSampleData, GraphiteTimeSeriesDataModel) {
+  .controller('GraphiteSamplesCtrl', function ($scope, $window, $interval, nvd3ChartDefAttrs, WidgetDefaults, GraphiteTimeSeriesDataModel) {
     var widgetDefinitions = [
     
       //AW This is how Rickshaw graphite widget was invoked in previous project
@@ -82,19 +82,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'         
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
@@ -112,19 +100,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
@@ -142,20 +118,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          noData: 'No data for you Doc! Please edit graphite target...',        
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -173,19 +136,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -203,19 +154,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: 400,
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()',
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          // showControls: true,        
-          color: "colorFunction()",
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -233,19 +172,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
@@ -263,20 +190,7 @@ angular.module('app')
         directive: 'nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: '350',
-          showXAxis: 'true',
-          showYAxis: 'true',
-          xAxisTickFormat: 'xAxisTickFormat()',
-          color: "colorFunction()",
-          noData: 'No data for you Doc! Please edit graphite target...',        
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          isArea: true,   
-          forcey: '[0,2]'
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
@@ -294,17 +208,7 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: 350,
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()',
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          color: "colorFunction()"
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
@@ -323,22 +227,12 @@ angular.module('app')
         directive: 'nvd3-stacked-area-chart',
         dataAttrName: 'data',
         dataModelType: GraphiteTimeSeriesDataModel,
-        attrs: {
-          height: 350,
-          showXAxis: true,
-          showYAxis: true,
-          xAxisTickFormat: 'xAxisTickFormat()',
-          interactive: true,
-          useInteractiveGuideline: true,
-          tooltips: true,
-          showLegend: true,        
-          color: "colorFunction()"
-        },
+        attrs: nvd3ChartDefAttrs,
         dataModelOptions: {
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-1h',
-            until: 'now',
+            until: 'now'
             // target:'randomWalk("random walk 2")', // No target: default random walk is three
           }
         },
@@ -346,27 +240,79 @@ angular.module('app')
           width: '400px'
         }
       },
-      
-      // CORS not enabled for PROD
-      // http://metrics.eikon-mon.int.thomsonreuters.com/render/?from=-6h&until=now&target=stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage
-      // {
-      //   name: 'RealADCDataProd',
-      //   directive: 'graphite',
-      //   dataAttrName: 'graphite',
-      //   dataModelType: GraphiteTimeSeriesDataModel,
-      //   dataModelOptions: {
-      //     params: {
-      //       url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
-      //       from:'-6h',
-      //       until: 'now',
-      //       target:'stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage'
-      //     }
-      //   },
-      //   style: {
-      //     width: '50%'
-      //   }
-      // },
-      // {
+      {
+        name: 'nvStackedBetaCMS',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: nvd3ChartDefAttrs,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.beta-ntc-cell.eui-cms-*.*.os.cpu.usage']
+            // target: ['stats.amers.beta-hdc-pod.dcl-dcs-igst.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
+        name: 'nvStackedBeta',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: nvd3ChartDefAttrs,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.beta-hdc-pod.dcl-dcs-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
+        name: 'nvStackedAmers',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: nvd3ChartDefAttrs,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.amers.prod-hdc-pod.dcl-dcs-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      },
+      {
+        name: 'nvStackedEmea',
+        directive: 'nvd3-stacked-area-chart',
+        dataAttrName: 'data',
+        dataModelType: GraphiteTimeSeriesDataModel,
+        attrs: nvd3ChartDefAttrs,
+        dataModelOptions: {
+          params: {
+            url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
+            from:'-48h',
+            until: 'now',
+            target: ['stats.emea.prod-dtc-pod.dcl-dcs-*.*.os.cpu.usage']
+          }
+        },
+        style: {
+          width: '800px'
+        }
+      }
     ];
 
     // Make all widgets default
@@ -388,33 +334,16 @@ angular.module('app')
       storageId: 'andy-dashboard-graphite',
       widgetButtons: true,
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
+      defaultWidgets: defaultWidgets
       //AW Set custom widget template for graphite directive at dasboard level
       // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
     };
 
-    // nvd3-stacked-area-chart
-    $scope.stackedAreaChartData = stackedAreaChartSampleData;
+    // Chart Options
+    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
+    $scope.colorFunction = WidgetDefaults.colorFunction;
+    // external controls
 
-    $scope.xAxisTickFormat = function () {
-      return function (d) {
-        return d3.time.format('%x')(new Date(d));
-      };
-    };
-
-    
-    // D3.color() schemes nvd3/test/stackedAreaChartTest.html
-    // var d3scheme = d3.scale.category10(); // Primary Colors
-    // var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
-    var d3scheme = d3.scale.category20b(); // Subtle shades of purple
-    // var d3scheme = d3.scale.category20c(); // Subtle shades of blue
-    var keyColor = function(d, i) {
-      return d3scheme(d.key);
-    };    
-    // Switch color scheme here
-    $scope.colorFunction = function() { 
-      return keyColor;
-    };
       
     // external controls
     $scope.addWidget = function (directive) {

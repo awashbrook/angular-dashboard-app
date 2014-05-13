@@ -59,9 +59,13 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'DataCloudCtrl'
       })
-      .when('/graphite', {
+      .when('/graphiteDefault', {
         templateUrl: 'views/main.html',
-        controller: 'GraphiteCtrl'
+        controller: 'GraphiteDefaultCtrl'
+      })
+      .when('/graphiteSamples', {
+        templateUrl: 'views/main.html',
+        controller: 'GraphiteSamplesCtrl'
       })
       .when('/default', {
         templateUrl: 'views/main.html',

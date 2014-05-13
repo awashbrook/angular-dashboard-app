@@ -9,9 +9,11 @@ angular.module('app.service')
       interactive: true,
       useInteractiveGuideline: true,
       tooltips: true,
-      showLegend: true,        
-      // showControls: true,        
-      color: "colorFunction()",
+      showLegend: true,
+      // AW Only relevant for stacked charts and doesn't render nicely enough to enable
+      // showControls: true,
+      noData: 'No data for YOU!', // TODO Something more interesting
+      color: "colorFunction()", // defined below
       forcey: '[0,2]'
   })
   .service('WidgetDefaults', function (nvd3ChartDefAttrs, GraphiteTimeSeriesDataModel) {
