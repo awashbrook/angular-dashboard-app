@@ -63,6 +63,10 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'GraphiteDefaultCtrl'
       })
+      .when('/graphiteDefaultPersistence', {
+        templateUrl: 'views/main.html',
+        controller: 'GraphiteDefaultPersistenceCtrl'
+      })
       .when('/graphiteSamples', {
         templateUrl: 'views/main.html',
         controller: 'GraphiteSamplesCtrl'

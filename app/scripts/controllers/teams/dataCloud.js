@@ -120,12 +120,19 @@ angular.module('app')
     }
     ];
 
+    // Make all widgets default
+    var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
+      return {
+        name: widgetDef.name
+      };
+    });
+
     $scope.dashboardOptions = {
       storage: $window.localStorage,
-      storageId: 'andy-dashboard-datacloud',
+      storageId: 'andy-dashboard-datacloud-demo',
       widgetButtons: true,
-      widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions),
-      defaultWidgets: WidgetDefaults.defaultWidgets
+      widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions), // Superset of default and data cloud widgets
+      defaultWidgets: defaultWidgets  // Default to data cloud demo spec
     };
 
     // Chart Options
