@@ -2,11 +2,26 @@
 
 // Storage enabled for this...this will be what a fresh dashboard will look like for new team
 angular.module('app')
-  .controller('GraphiteDefaultPersistenceCtrl', function ($scope, $window, $interval, nvd3ChartDefAttrs, WidgetDefaults) {
+  .controller('GraphiteDefaultBackendStorageCtrl', function ($scope, $interval, es, nvd3ChartDefAttrs, WidgetDefaults) {
+
+    es.ping({
+      // ping usually has a 100ms timeout
+      requestTimeout: 1000,
+
+      // undocumented params are appended to the query string
+      hello: "elasticsearch!"
+    }).then(function (body) {
+      console.log('All is well with Elastic Search');
+    }, function (error) {
+      console.trace('Elastic Search cluster is down!');
+      console.trace(error.message);
+    });
+
+    var esStorage = null; // TODO
 
     $scope.dashboardOptions = {
-      storage: $window.localStorage,
-      storageId: 'andy-dashboard-graphite-default',
+//      storage: esStorage,
+//      storageId: 'andy-dashboard-graphite-default-backend-storage',
       widgetButtons: true,
       widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions,
       defaultWidgets: WidgetDefaults.defaultWidgets

@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 
 angular.module('app')
   .controller('GraphiteOptionsCtrl', function (_, $scope, GraphiteDatasource) {
@@ -57,7 +57,7 @@ angular.module('app')
 //      if (newTarget && (!angular.equals(this.dataModelOptions.params.target, newTarget)))
 //
 //        console.log(this.widgetScope.widget.title + ' graphite model options changed: ' + JSON.stringify(newTarget));
-
+         widget.editModalOptions.resolve
 
     }
 

@@ -3,6 +3,7 @@
 angular.module('ui.dashboard.widgets', ['ngGrid']);
 
 angular.module('app', [
+    'elasticsearch',
     'app.service',
     'app.websocket',
     'ngRoute',
@@ -13,10 +14,11 @@ angular.module('app', [
     'nvd3ChartDirectives',
     'ui.dashboard.widgets'
   ])
+  // Bower deps setup by index.js
   .constant('settings', window.settings)
   .constant('$', window.$)
   .constant('_', window._)
-    .constant('moment', window.moment )
+  .constant('moment', window.moment )
   .config(function ($routeProvider, webSocketProvider, settings) {
     if (settings) {
       webSocketProvider.setWebSocketURL(settings.webSocketURL);
@@ -63,9 +65,13 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'GraphiteDefaultCtrl'
       })
-      .when('/graphiteDefaultPersistence', {
+      .when('/graphiteDefaultLocalStorage', {
         templateUrl: 'views/main.html',
-        controller: 'GraphiteDefaultPersistenceCtrl'
+        controller: 'GraphiteDefaultLocalStorageCtrl'
+      })
+      .when('/graphiteDefaultBackendStorage', {
+        templateUrl: 'views/main.html',
+        controller: 'GraphiteDefaultBackendStorageCtrl'
       })
       .when('/graphiteSamples', {
         templateUrl: 'views/main.html',
