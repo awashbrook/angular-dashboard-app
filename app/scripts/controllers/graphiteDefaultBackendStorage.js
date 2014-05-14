@@ -20,17 +20,17 @@ angular.module('app')
 //    https://github.com/elasticsearch/elasticsearch-js#examples
 
 //    http://events.alpha.eikon-mon.int.thomsonreuters.com/api//_search?q=pants
-    es.search({
-      q: 'pants',
-      requestTimeout: 2000
-    }).then(function (body) {
-      console.log("Hits for pants");
-      console.log(body.hits.hits);
-    }, function (error) {
-      console.error(error.message);
-    });
+//    es.search({
+//      q: 'pants',
+//      requestTimeout: 2000
+//    }).then(function (body) {
+//      console.log("Hits for pants");
+//      console.log(body.hits.hits);
+//    }, function (error) {
+//      console.error(error.message);
+//    });
 
-    // How does Grafana creat and read documents
+    // How does Grafana create and read documents
 
 //    http://events.alpha.eikon-mon.int.thomsonreuters.com/api//grafana-dash/dashboard/Alpha%20WFWS
 //    es.get({
@@ -61,8 +61,11 @@ angular.module('app')
 
     var index = 'malhar-dash';
     var type = 'dashboard';
-    var storageId = 'andy-dashboard-graphite-default-backend-storage3';
+    var storageId = 'andy-dashboard-graphite-default-backend-storage4';
     var sampleMalharDashboard = {"widgets":[{"title":"Mat","name":"nvLineChartAlpha","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"color":"colorFunction()","forcey":"[0,2]"}},{"title":"Jan","name":"nvLineChartBeta","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"andy random walk 1\")","randomWalk(\"olivier random walk 2\")","randomWalk(\"fabrice random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"color":"colorFunction()","forcey":"[0,2]"}},{"title":"Widget 3","name":"nvLineChartProd","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"color":"colorFunction()","forcey":"[0,2]"}}]};
+
+    elasticStorage.setItem(storageId, sampleMalharDashboard);
+    elasticStorage.getItem(storageId);
 
 //    es.create({
 //      index: index,
@@ -87,8 +90,6 @@ angular.module('app')
 //      console.error(error.message);
 //    });
 
-    elasticStorage.setItem(storageId, sampleMalharDashboard);
-    elasticStorage.getItem(storageId);
 
 
 

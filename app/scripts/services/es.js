@@ -47,6 +47,28 @@ angular.module('app.service')
       };
       elasticStorage.removeItem = function (key) {};
 
+    /* results are returned as a promise */
+//    var promiseThen = function (esPromise, successcb, errorcb) {
+//      return esPromise.then(function (response) {
+//        (successcb || angular.noop)(response.data);
+//        return response.data;
+//      }, function (response) {
+//        (errorcb || angular.noop)(response.data);
+//        return response.data;
+//      });
+//    };
+//
+//    put: function (path, data, successcb, errorcb) {
+//      path = config.server + path;
+//      var reqConfig = {url: path, data: data, method: 'PUT'};
+//      return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
+//    },
+//    setItem: function (path, data, successcb, errorcb) {
+//      path = config.server + path;
+//      var reqConfig = {url: path, data: data, method: 'PUT'};
+//      return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
+//    },
+
 
       return elasticStorage;
 
