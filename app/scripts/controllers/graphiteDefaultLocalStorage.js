@@ -7,6 +7,7 @@ angular.module('app')
     $scope.dashboardOptions = {
       storage: $window.localStorage,
       storageId: 'andy-dashboard-graphite-default-local-storage',
+      explicitSave: true,
       widgetButtons: true,
       widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions,
       defaultWidgets: WidgetDefaults.defaultWidgets

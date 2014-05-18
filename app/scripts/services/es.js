@@ -26,17 +26,23 @@ angular.module('app.service')
           index: elasticStorage.index,
           type: elasticStorage.type,
           id: key,
+          // Only for Cache Consistency...you can include rev of last copy you have cached in which case only
+          // version: 100,
           requestTimeout: 2000
         }).then(function (body) {
           console.log(body);
-//          return body._source;
-          return sampleMalharDashboard;
+          // Body is already de-serialized and not raw JSON
+          var serialized = JSON.stringify(body._source);
+          //TODO Raise issue to Malhar to allow deserialzation to happen upstream!
+          console.log("ES Retrieved " + body._id + " version " + body._version + ": " + serialized);
+          return serialized;
         }, function (error) {
           console.error(error.message);
         });
       };
       // Index call does Create and Update, which Create will not!
       elasticStorage.setItem = function (key, value) {
+        console.log("ES Storing " + key + " as " + JSON.stringify(value));
         return es.index({
           index: elasticStorage.index,
           type: elasticStorage.type,
@@ -44,14 +50,17 @@ angular.module('app.service')
           body: value,
           requestTimeout: 2000
         }).then(function (body) {
-          console.log(body);
+          console.log("ES Stored" + JSON.stringify(body));
           return body;
         }, function (error) {
           console.error(error.message);
         });
       };
-      elasticStorage.removeItem = function (key) {};
+      elasticStorage.removeItem = function (key) {
+        //TODO Complete CRUD!!
+      };
 
+    return elasticStorage;
 
     /* results are returned as a promise */
 //    var promiseThen = function (esPromise, successcb, errorcb) {
@@ -70,15 +79,5 @@ angular.module('app.service')
 //      return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
 //    },
 
-      return elasticStorage;
-
     })
 
-// Canned bad response
-//{"_index":"malhar-dash","_type":"dashboard","_id":"andy-dashboard-graphite-default-backend-storage6","_version":69,"exists":true, "_source" :
-//
-//  {"widgets":[{"title":"Widget 1","name":"nvLineChartAlpha","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"noData":"No data for YOU!","color":"colorFunction()","forcey":"[0,2]"}},{"title":"Widget 2","name":"nvLineChartBeta","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"noData":"No data for YOU!","color":"colorFunction()","forcey":"[0,2]"}},{"title":"Widget 3","name":"nvLineChartProd","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"noData":"No data for YOU!","color":"colorFunction()","forcey":"[0,2]"}}]}}
-//
-//Local Store:
-//
-//  {"widgets":[{"title":"Widget 1","name":"nvLineChartAlpha","style":{"width":"400px"},"dataModelOptions":{"params":{"url":"http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/","from":"-2h","until":"now","target":["randomWalk(\"random walk 1\")","randomWalk(\"random walk 2\")","randomWalk(\"random walk 3\")"]}},"attrs":{"isArea":true,"height":400,"showXAxis":true,"showYAxis":true,"xAxisTickFormat":"xAxisTickFormat()","interactive":true,"useInteractiveGuideline":true,"tooltips":true,"showLegend":true,"noData":"No data for YOU!","color":"colorFunction()","forcey":"[0,2]"}}]}

@@ -93,6 +93,7 @@ angular.module('app')
     $scope.dashboardOptions = {
       storage: elasticStorage,
       storageId: storageId,
+      explicitSave: true,
       widgetButtons: true,
       widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions,
       defaultWidgets: WidgetDefaults.defaultWidgets
