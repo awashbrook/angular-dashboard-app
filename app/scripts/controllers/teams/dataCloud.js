@@ -136,8 +136,14 @@ angular.module('app')
     };
 
     // Chart Options
-    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
+
+    // Chart Options
     $scope.colorFunction = WidgetDefaults.colorFunction;
+    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
+    $scope.yAxisTickFormat = WidgetDefaults.yAxisTickFormat;
+    $scope.xFunction = WidgetDefaults.xFunction;
+    $scope.yFunction = WidgetDefaults.yFunction;
+
     // external controls
 
     $scope.addWidget = function (directive) {

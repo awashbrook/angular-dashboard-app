@@ -97,9 +97,9 @@ angular.module('app.service')
     };
    this.yAxisTickFormat = function () {
       return function (d) {
-        return d;
-//        return d3.format('%')(d/100); // For percentage CPU
-//        d3.format(‘,.2f’); // Do we also need to round to 2dp
+//        return d;
+//        return d3.format('%')(d/100); // For percentage
+        return d3.format(',.2f')(d); // Do we also need to round to 2dp
       };
     };
 
@@ -110,7 +110,7 @@ angular.module('app.service')
     };
     this.yFunction = function(){
       return function(d) {
-//        return d3.format('%')(d[1]/100); // For percentage CPU
+//        return d3.format('%')(d[1]/100); // For percentage
 //        return d3.format(',d')(d[1]);
         return d[1];
       }
