@@ -5,7 +5,10 @@ angular.module('app.service')
       height: 400,
       showXAxis: true,
       showYAxis: true,
-      xAxisTickFormat: 'xAxisTickFormat()',
+      xAxisTickFormat: "xAxisTickFormat()",
+      yAxisTickFormat: "yAxisTickFormat()",
+      x:"xFunction()",
+      y:"yFunction()",
       interactive: true,
       useInteractiveGuideline: true,
       tooltips: true,
@@ -28,7 +31,7 @@ angular.module('app.service')
           params: {
             url: 'http://metrics.alpha.eikon-mon.int.thomsonreuters.com/render/',
             from:'-2h',
-            until: 'now',
+            until: 'now'
           }
         },
         style: {
@@ -45,7 +48,7 @@ angular.module('app.service')
           params: {
             url: 'http://metrics.beta.eikon-mon.int.thomsonreuters.com/render/',
             from:'-2h',
-            until: 'now',
+            until: 'now'
           }
         },
         style: {
@@ -62,7 +65,7 @@ angular.module('app.service')
           params: {
             url: 'http://metrics.eikon-mon.int.thomsonreuters.com/render/',
             from:'-2h',
-            until: 'now',
+            until: 'now'
           }
         },
         style: {
@@ -92,6 +95,26 @@ angular.module('app.service')
         return d3.time.format('%x')(new Date(d));
       };
     };
+   this.yAxisTickFormat = function () {
+      return function (d) {
+        return d;
+//        return d3.format('%')(d/100); // For percentage CPU
+//        d3.format(‘,.2f’); // Do we also need to round to 2dp
+      };
+    };
+
+    this.xFunction = function(){
+      return function(d) {
+        return d[0];
+      }
+    };
+    this.yFunction = function(){
+      return function(d) {
+//        return d3.format('%')(d[1]/100); // For percentage CPU
+//        return d3.format(',d')(d[1]);
+        return d[1];
+      }
+    }
     
     // D3.color() schemes nvd3/test/stackedAreaChartTest.html
     // var d3scheme = d3.scale.category10(); // Primary Colors

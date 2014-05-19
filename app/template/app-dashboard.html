@@ -19,9 +19,9 @@
 
         <button class="btn btn-warning" ng-click="resetWidgetsToDefault()">Default Widgets</button>
 
-        <button ng-if="options.storage && options.explicitSave" ng-click="options.saveDashboard()" class="btn btn-success" ng-hide="!options.unsavedChangeCount">{{ !options.unsavedChangeCount ? "No Changes" : "Save" }}</button>
-
         <button ng-click="clear();" ng-hide="!widgets.length" type="button" class="btn btn-info">Clear</button>
+
+        <button ng-if="options.storage && options.explicitSave" ng-click="options.saveDashboard()" class="btn btn-success" ng-hide="!options.unsavedChangeCount">{{ !options.unsavedChangeCount ? "No Changes" : "Save" }}</button>
     </div>
 
     <div ui-sortable="sortableOptions" ng-model="widgets" class="dashboard-widget-area">

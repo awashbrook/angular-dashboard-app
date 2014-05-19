@@ -5,9 +5,12 @@ angular.module('app')
   .controller('GraphiteDefaultElasticStorageCtrl', function ($scope, $interval, $route, $routeParams, elasticStorage, nvd3ChartDefAttrs, WidgetDefaults) {
 
     // Chart Options
-    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
     $scope.colorFunction = WidgetDefaults.colorFunction;
-      
+    $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
+    $scope.yAxisTickFormat = WidgetDefaults.yAxisTickFormat;
+    $scope.xFunction = WidgetDefaults.xFunction;
+    $scope.yFunction = WidgetDefaults.yFunction;
+
     // external controls
     $scope.addWidget = function (directive) {
       $scope.dashboardOptions.addWidget({
@@ -24,15 +27,14 @@ angular.module('app')
       });
     };
 
+    //  http://compass/#/dashboard/graphiteDefaultBackendStorage?id=<dashboard-storage-id>
+    //
+    //  $routeParams ==> {dashboard: graphiteDefaultBackendStorage,id:<dashboard-storage-id>}
+    //
+    //      http://deansofer.com/posts/view/14/AngularJs-Tips-and-Tricks-UPDATED#routing
     $scope.$on('$routeChangeSuccess', function(event, routeData){
-//      http://deansofer.com/posts/view/14/AngularJs-Tips-and-Tricks-UPDATED#routing
-
-//      http://compass/#/dashboard/graphiteDefaultBackendStorage?id=<dashboard-storage-id>
-//
-//        $routeParams ==> {dashboard: graphiteDefaultBackendStorage,id:<dashboard-storage-id>}
-
       var routeParams = routeData.params;
-//      console.log(routeParams);
+      // console.log(routeParams);
       var dynamicDashboardId = routeParams.id || 'graphite-default-elastic-storage';
       console.log("Your dashboard id: " + dynamicDashboardId);
 
@@ -46,8 +48,6 @@ angular.module('app')
         //AW Set custom widget template for graphite directive at dashboard level
         // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
       };
-
-
     });
 
   });
