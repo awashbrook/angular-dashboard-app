@@ -27,7 +27,7 @@ angular.module('app', [
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'GraphiteDefaultElasticStorageCtrl'
       })
       .when('/rest', {
         templateUrl: 'views/main.html',
