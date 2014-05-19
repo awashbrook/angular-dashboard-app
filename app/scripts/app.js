@@ -19,7 +19,7 @@ angular.module('app', [
   .constant('$', window.$)
   .constant('_', window._)
   .constant('moment', window.moment )
-  .config(function ($routeProvider, webSocketProvider, settings) {
+  .config(function ($routeProvider, $locationProvider, webSocketProvider, settings) {
     if (settings) {
       webSocketProvider.setWebSocketURL(settings.webSocketURL);
     }
@@ -57,6 +57,7 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'ServerDataCtrl'
       })
+      // Above are from Malhar WebApp Demo
       .when('/datacloud', {
         templateUrl: 'views/main.html',
         controller: 'DataCloudCtrl'
@@ -69,17 +70,13 @@ angular.module('app', [
         templateUrl: 'views/main.html',
         controller: 'GraphiteDefaultLocalStorageCtrl'
       })
-      .when('/graphiteDefaultBackendStorage', {
+      .when('/graphiteDefaultElasticStorage', {
         templateUrl: 'views/main.html',
-        controller: 'GraphiteDefaultBackendStorageCtrl'
+        controller: 'GraphiteDefaultElasticStorageCtrl'
       })
       .when('/graphiteSamples', {
         templateUrl: 'views/main.html',
         controller: 'GraphiteSamplesCtrl'
-      })
-      .when('/default', {
-        templateUrl: 'views/main.html',
-        controller: 'WidgetDefaultsCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -87,4 +84,7 @@ angular.module('app', [
 
     // Use Bootstrap 3 theme in PNotify jQuery plugin
     jQuery.pnotify.defaults.styling = 'bootstrap3';
+
+    //AW enable HTML5 mode for navigation
+//    $locationProvider.html5Mode(true); // Breaks routes above, why?
   });
