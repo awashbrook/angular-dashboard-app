@@ -6419,16 +6419,19 @@ svg {
 body {
   padding-top: 50px;
 }
+
 .dashboard-container {
   margin-top: 20px;
 }
 .navbar-inverse {
   background: #11506d;
 }
+
 .navbar-inverse .navbar-brand {
-  background: url("../images/main_banner.png") no-repeat scroll 0 0;
+  background: url("../images/compass.png") no-repeat scroll 0 0;
   color: #ffffff;
-  padding-left: 240px;
+  padding-left: 50px;
+  background-position: left top 5px;
 }
 .navbar-inverse .navbar-brand sup {
   vertical-align: middle;
