@@ -117,9 +117,9 @@ angular.module('app.service')
     }
     
     // D3.color() schemes nvd3/test/stackedAreaChartTest.html
-    // var d3scheme = d3.scale.category10(); // Primary Colors
-    // var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
-    // var d3scheme = d3.scale.category20b(); // Subtle shades of purple
+//    var d3scheme = d3.scale.category10(); // Primary Colors
+//    var d3scheme = d3.scale.category20(); // Very Reuters like, also the default
+//    var d3scheme = d3.scale.category20b(); // Subtle shades of purple
     var d3scheme = d3.scale.category20c(); // Subtle shades of blue
     var keyColor = function(d, i) {
       return d3scheme(d.key);

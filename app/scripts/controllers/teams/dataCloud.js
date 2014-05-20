@@ -1,10 +1,11 @@
-'use strict';
+  'use strict';
 
 angular.module('app')
-  .controller('DataCloudCtrl', function ($scope, $window, nvd3ChartDefAttrs, WidgetDefaults, GraphiteTimeSeriesDataModel) {
+  .controller('DataCloudCtrl', function ($scope, $window, elasticStorage, nvd3ChartDefAttrs, WidgetDefaults, GraphiteTimeSeriesDataModel) {
 
     var widgetDefinitions = [
     {
+      title: 'ADC BETA Ingestion CPU',
       name: 'nvLineBetaIgst',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -16,14 +17,15 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
-          target: ['stats.amers.beta-hdc-pod.dcl-dcs-igst.*.os.cpu.usage']
+          target: ['stats.amers.*-*-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
-        width: '400px'
+        width: '480px'
       }
     },
     {
+      title: 'ADC BETA Vectorwize CPU',
       name: 'nvLineBetaVect',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -35,7 +37,7 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.amers.beta-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
-          target: ['stats.amers.beta-hdc-pod.dcl-dcs-vect.*.os.cpu.usage']
+          target: ['stats.amers.*-*-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -43,6 +45,7 @@ angular.module('app')
       }
     },
     {
+      title: 'ADC EMEA Ingestion CPU',
       name: 'nvLineEmeaIgst',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -54,14 +57,15 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(igst).*.os.cpu.usage']
-          target: ['stats.emea.prod-dtc-pod.dcl-dcs-igst.*.os.cpu.usage']
+          target: ['stats.emea.*-*-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
-        width: '400px'
+        width: '480px'
       }
     },
     {
+      title: 'ADC EMEA Vectorwize CPU',
       name: 'nvLineEmeaVect',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -73,7 +77,7 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.emea.prod-dtc-pod.dcl-dcs-(vect).*.os.cpu.usage']
-          target: ['stats.emea.prod-dtc-pod.dcl-dcs-vect.*.os.cpu.usage']
+          target: ['stats.emea.*-*-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -81,6 +85,7 @@ angular.module('app')
       }
     },
     {
+      title: 'ADC EMEA Ingestion CPU',
       name: 'nvLineAmersIgst',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -92,14 +97,15 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(igst).*.os.cpu.usage']
-          target: ['stats.amers.prod-hdc-pod.dcl-dcs-igst.*.os.cpu.usage']
+          target: ['stats.amers.*-*-pod.dcl-dcs-igst.*.os.cpu.usage']
         }
       },
       style: {
-        width: '400px'
+        width: '480px'
       }
     },
     {
+      title: 'ADC AMERS Vectorwize CPU',
       name: 'nvLineAmersVect',
       directive: 'nvd3-line-chart',
       dataAttrName: 'data',
@@ -111,7 +117,7 @@ angular.module('app')
           from:'-48h',
           until: 'now',
 //          target: ['stats.amers.prod-hdc-pod.dcl-dcs-(vect).*.os.cpu.usage']
-          target: ['stats.amers.prod-hdc-pod.dcl-dcs-vect.*.os.cpu.usage']
+          target: ['stats.amers.*-*-pod.dcl-dcs-vect.*.os.cpu.usage']
         }
       },
       style: {
@@ -127,16 +133,6 @@ angular.module('app')
       };
     });
 
-    $scope.dashboardOptions = {
-      storage: $window.localStorage,
-      storageId: 'andy-dashboard-datacloud-demo',
-      widgetButtons: true,
-      widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions), // Superset of default and data cloud widgets
-      defaultWidgets: defaultWidgets  // Default to data cloud demo spec
-    };
-
-    // Chart Options
-
     // Chart Options
     $scope.colorFunction = WidgetDefaults.colorFunction;
     $scope.xAxisTickFormat = WidgetDefaults.xAxisTickFormat;
@@ -145,7 +141,6 @@ angular.module('app')
     $scope.yFunction = WidgetDefaults.yFunction;
 
     // external controls
-
     $scope.addWidget = function (directive) {
       $scope.dashboardOptions.addWidget({
         name: directive
@@ -160,4 +155,27 @@ angular.module('app')
         }
       });
     };
+
+    //  http://compass/#/dashboard/graphiteDefaultBackendStorage?id=<dashboard-storage-id>
+    //
+    //  $routeParams ==> {dashboard: graphiteDefaultBackendStorage,id:<dashboard-storage-id>}
+    //
+    //      http://deansofer.com/posts/view/14/AngularJs-Tips-and-Tricks-UPDATED#routing
+    $scope.$on('$routeChangeSuccess', function(event, routeData){
+      var routeParams = routeData.params;
+      // console.log(routeParams);
+      var dynamicDashboardId = routeParams.id || 'dashboard-datacloud-sample';
+      console.log("Your dashboard id: " + dynamicDashboardId);
+
+      $scope.dashboardOptions = {
+        storage: elasticStorage,
+        storageId: dynamicDashboardId,
+        explicitSave: true,
+        widgetButtons: true,
+        widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions), // Superset of default and data cloud widgets
+        defaultWidgets: defaultWidgets  // Default to data cloud demo spec
+        //AW Set custom widget template for graphite directive at dashboard level
+        // optionsTemplateUrl: 'scripts/widgets/graphite/graphite-options.tpl.html'
+      };
+    });
   });
