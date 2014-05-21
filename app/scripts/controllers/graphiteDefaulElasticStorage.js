@@ -41,6 +41,9 @@ angular.module('app')
       $scope.dashboardOptions = {
         storage: elasticStorage,
         storageId: dynamicDashboardId,
+        // Thank you AndyP
+        // https://github.com/DataTorrent/malhar-angular-dashboard/issues/38
+        stringifyStorage: false,
         explicitSave: true,
         widgetButtons: true,
         widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions,

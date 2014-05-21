@@ -170,6 +170,7 @@ angular.module('app')
       $scope.dashboardOptions = {
         storage: elasticStorage,
         storageId: dynamicDashboardId,
+        stringifyStorage: false,
         explicitSave: true,
         widgetButtons: true,
         widgetDefinitions: WidgetDefaults.widgetDefaultDefinitions.concat(widgetDefinitions), // Superset of default and data cloud widgets

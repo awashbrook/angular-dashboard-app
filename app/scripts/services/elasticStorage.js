@@ -111,12 +111,12 @@ angular.module('app.service')
           // version: 100,
           requestTimeout: 2000
         }).then(function (body) {
-          console.log(body);
+          console.log("ES Retrieved " + body._id + " version " + body._version + ": " + JSON.stringify(body._source));
+          console.log(body._source);
           // Body is already de-serialized and not raw JSON
-          var serialized = JSON.stringify(body._source);
-          //TODO https://github.com/DataTorrent/malhar-angular-dashboard/issues/38
-          console.log("ES Retrieved " + body._id + " version " + body._version + ": " + serialized);
-          return serialized;
+          //AW Thanks AndyP https://github.com/DataTorrent/malhar-angular-dashboard/issues/38
+//          var serialized = JSON.stringify(body._source);
+          return body._source;
         }, function (error) {
           console.error(error.message);
         });
