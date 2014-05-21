@@ -114,7 +114,7 @@ angular.module('app.service')
           console.log(body);
           // Body is already de-serialized and not raw JSON
           var serialized = JSON.stringify(body._source);
-          //TODO Raise issue to Malhar to allow deserialzation to happen upstream!
+          //TODO https://github.com/DataTorrent/malhar-angular-dashboard/issues/38
           console.log("ES Retrieved " + body._id + " version " + body._version + ": " + serialized);
           return serialized;
         }, function (error) {
