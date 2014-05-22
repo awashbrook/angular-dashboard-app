@@ -7,6 +7,7 @@
 angular.module('app.service')
   .service('es', function (esFactory) {
     return esFactory({
+      // TODO Abstrac to config/settings
       host: 'http://events.alpha.eikon-mon.int.thomsonreuters.com/api/'  // EMS proxies via apache
 
       // http://www.elasticsearch.org/guide/en/elasticsearch/client/javascript-api/current/configuration.html#config-options
@@ -22,9 +23,9 @@ angular.module('app.service')
       // undocumented params are appended to the query string
 //      hello: "elasticsearch!"
     }).then(function (body) {
-      console.log('All is well with Elastic Search');
+      console.log('All is well with Elasticsearch');
     }, function (error) {
-      console.error('Elastic Search cluster is down!');
+      console.error('Elasticsearch cluster is down!');
       console.error(error.message);
     });
 

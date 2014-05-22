@@ -10,12 +10,12 @@
         
         <!-- (key, value) in expression – where key and value can be any user defined identifiers, and expression is the scope expression giving the collection to enumerate.
         For example: (name, age) in {'adam':10, 'amalie':12} -->
-          <label for="intervalName" class="col-sm-2 control-label">Interval</label>
+          <label for="intervalName" class="col-sm-2 control-label">Time Interval</label>
           <div class="col-sm-10">
               <ul>
                   <li ng-repeat="(key, value) in interval">
-                      <label for="intervalName" class="col-sm-2 control-label">{{value.value}}</label>
-                      <input type="text" class="form-control" name="intervalValue" ng-model="value">
+                      <label for="key" class="col-sm-2 control-label">{{key}}</label>
+                      <input type="text" class="form-control" name="interval" ng-model="value.value">
                   </li>
               </ul>
           </div>
