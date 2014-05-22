@@ -71,7 +71,7 @@ angular.module('app')
       // Need watch of array values for target changes, deepest kind of watch, need for editing values
       $scope.$watch('interval', function (newInterval) {
         if (newInterval) {
-          console.log(unwrapScopeModelValues(newInterval));
+//          console.log(unwrapScopeModelValues(newInterval));
           widget.dataModel.setInterval(unwrapScopeModelValues(newInterval));
 //          console.log(widget);
         }

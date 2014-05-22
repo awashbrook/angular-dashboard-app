@@ -184,7 +184,7 @@ angular.module('app.service')
 
           // Log after updates
           console.log(this.dataModelOptions.params);
-          console.log(this);
+//          console.log(this);
 
           this.callGraphite();
 
