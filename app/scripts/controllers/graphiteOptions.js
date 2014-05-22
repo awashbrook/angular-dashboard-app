@@ -44,44 +44,38 @@ angular.module('app')
         }, true); // deepWatch == true to monitor the entire array
 
       // Map native object hash to array of objects with string property so $watch works!
-      var mapModelProperties = function (object) {
-        // This is the structure of collection we can $watch changes in for
-        //  { keyName: { keyValue: value } }
-        return _.map(object, function (value, key) {
-          var keyValue = {};
-          keyValue[key] = value;
-          var hash = {};
-          hash[key] = keyValue;
-          return hash;
+      //   { keyName: { 'value': keyValue } }
+      // This is the structure of collection we can $watch changes in angular model
+      var wrapScopeModelValues = function(obj) {
+        var wrappedObj = {};
+        _.each(obj, function (value, key) {
+          wrappedObj[key] = {'value': value};
         });
+        return wrappedObj;
+      }
+      var unwrapScopeModelValues = function(wrappedObj) {
+        var obj = {};
+        _.each(wrappedObj, function (value, key) {
+          obj[key] = value.value;
+        });
+        return obj;
       }
 
       // Handle updating interval from and until in data model when changes made in options
       // Data model will return interval { from,  until }
+//      var interval = { from: '-1h',  until: 'now'};
+      var interval = widget.dataModel.getInterval();
 
-//      var interval = mapModelProperties({ from: '-1h',  until: 'now'});
-      var interval = { from: '-1h',  until: 'now'};
-      var intervalWrapped = {};
-
-      _.each(interval, function (value, key) {
-        intervalWrapped[key] = {'value': value};
-      });
-      $scope.interval = intervalWrapped;
+      $scope.interval = wrapScopeModelValues(interval);
 
       // Need watch of array values for target changes, deepest kind of watch, need for editing values
       $scope.$watch('interval', function (newInterval) {
         if (newInterval) {
-          // TODO Reverse map native string array to array of objects with string property so $watch works!
-//          var newTargets = _.map(newTarget, function (target) {
-//            return target.target;
-//          });
-//          widget.dataModel.setTarget(newTargets);
-          // Log after updates ... the widget dataModelOptions are a snapshot from initial state of dashboard
-          // They are not updated like the data source...so this can be misleading?!!!
-          console.log(newInterval);
-          console.log(widget);
+          console.log(unwrapScopeModelValues(newInterval));
+          widget.dataModel.setInterval(unwrapScopeModelValues(newInterval));
+//          console.log(widget);
         }
-      }, true); // deepWatch == true to monitor the entire array
+      }, true); // deepWatch == true to monitor the values being edited
 
 
     // This is collection we want to watch changes in attrs.attrName for

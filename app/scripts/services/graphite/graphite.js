@@ -169,6 +169,37 @@ angular.module('app.service')
         return this.dataModelOptions.params.target;
       };///.bind(this);
 
+//      var interval = { from: '-1h',  until: 'now'};
+      GraphiteTimeSeriesDataModel.prototype.setInterval = function (newInterval) {
+        if (newInterval && (
+          this.dataModelOptions.params.from !== newInterval.from ||
+          this.dataModelOptions.params.until !==  newInterval.until))
+//          && !angular.equals(this.dataModelOptions.params.from, newInterval.from)
+//          && !angular.equals(this.dataModelOptions.params.until, newInterval.until))
+       {
+          console.log(this.widgetScope.widget.title + ' graphite model options changed: ' + JSON.stringify(newInterval));
+
+          this.dataModelOptions.params.from = newInterval.from;
+          this.dataModelOptions.params.until = newInterval.until;
+
+          // Log after updates
+          console.log(this.dataModelOptions.params);
+          console.log(this);
+
+          this.callGraphite();
+
+          this.widgetScope.$emit('widgetChanged', this.widgetScope.widget);
+        }
+        return false;
+      };
+
+      GraphiteTimeSeriesDataModel.prototype.getInterval = function () {
+        return {
+          from: this.dataModelOptions.params.from,
+          until: this.dataModelOptions.params.until
+        }
+      };
+
       // For wildcard series, shorten the name of each series down by just displaying what wildcards resolve to!
       this.shortenMetricName = function(metric) {
         // var metric = 'stats.emea.prod-dtc-cell.eui-cms-webs.dtcp-cmswebs01.vertx.java.JVMMemory.HeapMemoryUsage_used';
@@ -220,7 +251,7 @@ angular.module('app.service')
         // 'randomWalk(%27random%20walk2%27)',
         'randomWalk("random walk 1")',
         'randomWalk("random walk 2")',
-        'randomWalk("random walk 3")',
+        'randomWalk("random walk 3")'
         ]
       );
 
