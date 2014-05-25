@@ -171,12 +171,10 @@ angular.module('app.service')
 
 //      var interval = { from: '-1h',  until: 'now'};
       GraphiteTimeSeriesDataModel.prototype.setInterval = function (newInterval) {
-        if (newInterval && (
-          this.dataModelOptions.params.from !== newInterval.from ||
-          this.dataModelOptions.params.until !==  newInterval.until))
-//          && !angular.equals(this.dataModelOptions.params.from, newInterval.from)
-//          && !angular.equals(this.dataModelOptions.params.until, newInterval.until))
-       {
+        if (newInterval
+          && this.dataModelOptions.params.from !== newInterval.from
+          && this.dataModelOptions.params.until !==  newInterval.until)
+        {
           console.log(this.widgetScope.widget.title + ' graphite model options changed: ' + JSON.stringify(newInterval));
 
           this.dataModelOptions.params.from = newInterval.from;
@@ -184,7 +182,7 @@ angular.module('app.service')
 
           // Log after updates
           console.log(this.dataModelOptions.params);
-//          console.log(this);
+          console.log(this);
 
           this.callGraphite();
 
@@ -244,21 +242,24 @@ angular.module('app.service')
 
       //AW TODO do I really like this: Rafe does!
 
-      // Default Random walk if no target provided
-      // params.target || (params.target =
+      // Default Random walk if no target provided...need to be able to delete targets
+
       this.getTarget() || this.setTarget(
         [
-        // 'randomWalk(%27random%20walk2%27)',
         'randomWalk("random walk 1")',
         'randomWalk("random walk 2")',
         'randomWalk("random walk 3")'
         ]
       );
 
+//      this.getInterval
+
+      // TODO what to rename this as graphite time period is now the "interval"
       // Default polling interval is 30 seconds
-      // TODO how to suppress interval? Setting to zero is not the same semantics as `window.setInterval`
+      // TODO how to suppress polling interval? Setting to zero is not the same semantics as `window.setInterval`
       // https://github.com/angular/angular.js/blob/ffe5115355baa6ee2136b6fb5e4828e4e2fa58f8/src/ng/interval.js#L133
       var interval = params.interval || (interval = 30);
+
 
       this.callGraphite();
 
